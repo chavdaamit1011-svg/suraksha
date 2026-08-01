@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+@layer utilities {
+  /* Eye Blink Animation for Cyber Surveillance Chatbot */
+  @keyframes eyeBlink {
+    0%, 88%, 100% {
+      transform: scaleY(1);
+      opacity: 1;
+    }
+    93% {
+      transform: scaleY(0.08);
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes pulseRadar {
+    0% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(245, 198, 35, 0.5);
+    }
+    70% {
+      transform: scale(1.05);
+      box-shadow: 0 0 0 16px rgba(245, 198, 35, 0);
+    }
+    100% {
+      transform: scale(0.95);
+      box-shadow: 0 0 0 0 rgba(245, 198, 35, 0);
+    }
+  }
+
+  .animate-eyeBlink {
+    animation: eyeBlink 3.2s infinite ease-in-out;
+    transform-origin: center;
+  }
+
+  .animate-pulseRadar {
+    animation: pulseRadar 2.5s infinite;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+/* GLOBAL THEME ENGINE - LIGHT & DARK MODES */
+:root, html.dark {
+  --app-bg: #0B0D0F;
+  --app-card: #1E1F22;
+  --app-card-border: rgba(245, 198, 35, 0.25);
+  --app-text-heading: #FFFFFF;
+  --app-text-body: #9CA3AF;
+  --app-accent: #F5C623;
+}
+
+html.light {
+  --app-bg: #F8FAFC;
+  --app-card: #FFFFFF;
+  --app-card-border: #E2E8F0;
+  --app-text-heading: #0F172A;
+  --app-text-body: #475569;
+  --app-accent: #D97706;
+}
+
+/* Universal Light Mode Overrides for ALL Pages */
+html.light body {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+html.light .bg-slate-950,
+html.light .bg-slate-900 {
+  background-color: #F8FAFC !important;
+}
+
+html.light .bg-slate-850,
+html.light .bg-slate-800 {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+}
+
+html.light .text-white,
+html.light .text-slate-100,
+html.light .text-slate-200 {
+  color: #0F172A !important;
+}
+
+html.light .text-slate-300,
+html.light .text-slate-400 {
+  color: #475569 !important;
+}
+
+html.light .border-slate-800,
+html.light .border-slate-850,
+html.light .border-slate-900 {
+  border-color: #E2E8F0 !important;
+}
+
+/* FIX LIGHT MODE HOVER DARKENING IN DROPDOWNS & BUTTONS */
+html.light .hover\:bg-slate-900:hover,
+html.light .hover\:bg-slate-850:hover,
+html.light .hover\:bg-slate-800:hover {
+  background-color: #F1F5F9 !important;
+  color: #D97706 !important;
+}
+
+/* Custom Theme Classes */
+.theme-app-bg {
+  background-color: var(--app-bg) !important;
+  color: var(--app-text-heading) !important;
+}
+
+.theme-app-card {
+  background-color: var(--app-card) !important;
+  border-color: var(--app-card-border) !important;
+  color: var(--app-text-heading) !important;
+}
+
+.theme-app-heading {
+  color: var(--app-text-heading) !important;
+}
+
+.theme-app-body {
+  color: var(--app-text-body) !important;
+}
+
+.trust-yellow-btn {
+  background-color: #F5C623 !important;
+  color: #0B0D0F !important;
+  font-weight: 700 !important;
+  transition: all 0.2s ease;
+}
+
+.trust-yellow-btn:hover {
+  background-color: #E5B612 !important;
+  transform: translateY(-1px);
+}
+
+body {
+  background-color: var(--app-bg);
+  color: var(--app-text-heading);
+  font-family: var(--font-inter), sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--app-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #F5C623;
+}
