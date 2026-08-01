@@ -33,7 +33,12 @@ export async function connectToDatabase() {
     };
 
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongooseInstance) => {
-      console.log('Connected to MongoDB Compass / Local Database: suraksha');
+      const isCloud = MONGODB_URI.includes('mongodb+srv');
+      if (isCloud) {
+        console.log('⚡ Connected to Production MongoDB Atlas Cloud Database!');
+      } else {
+        console.log('💻 Connected to Local MongoDB Compass Database: suraksha');
+      }
       return mongooseInstance;
     });
   }
