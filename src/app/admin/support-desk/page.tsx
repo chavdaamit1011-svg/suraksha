@@ -12,6 +12,10 @@ export default function SupportDeskAdminPage() {
 
   useEffect(() => {
     fetchTickets();
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') fetchTickets();
+    }, 5000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const fetchTickets = async () => {
@@ -55,7 +59,7 @@ export default function SupportDeskAdminPage() {
           <h1 className="text-2xl font-bold theme-app-heading flex items-center gap-2">
             <HelpCircle className="w-6 h-6 text-[#F5C623]" /> Website Contact Leads & Support Desk
           </h1>
-          <p className="text-xs theme-app-body">All website contact inquiries are saved here. Mark each lead as in progress or resolved after follow-up.</p>
+          <p className="text-xs theme-app-body">All website contact inquiries are saved here and auto-sync every 5 seconds. Mark each lead as in progress or resolved after follow-up.</p>
         </div>
 
         <div className="theme-app-card border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-4">

@@ -12,7 +12,10 @@ export default function ClientUsersPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/users').then((response) => response.json()).then((data) => setAccounts(data.users || [])).finally(() => setLoading(false));
+    const refresh = () => fetch('/api/users').then((response) => response.json()).then((data) => setAccounts(data.users || [])).finally(() => setLoading(false));
+    refresh();
+    const timer = window.setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, 10000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const clients = accounts.filter((account) => account.role === 'user' && (account.accountType === 'client' || (!account.accountType && account.company && account.company !== 'Personal Client Account')));

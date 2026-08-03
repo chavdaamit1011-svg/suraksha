@@ -23,11 +23,14 @@ export default function NewsletterAdminPage() {
   };
 
   useEffect(() => {
-    fetch('/api/newsletter')
+    const refresh = () => fetch('/api/newsletter')
       .then((response) => response.json())
       .then((data) => { if (data.success) setSubscribers(data.subscribers); })
       .catch(() => undefined)
       .finally(() => setLoading(false));
+    refresh();
+    const timer = window.setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, 10000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const updateStatus = async (id: string, status: Subscriber['status']) => {

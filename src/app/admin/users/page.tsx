@@ -36,6 +36,10 @@ export default function UsersSubscribersPage() {
 
   useEffect(() => {
     fetchUsers();
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') fetchUsers();
+    }, 10000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const fetchUsers = async () => {

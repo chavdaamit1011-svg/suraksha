@@ -37,6 +37,13 @@ export default function AdminDashboardPage() {
         if (data.tenders) setTenders(data.tenders);
       })
       .catch((e) => console.error(e));
+
+    const timer = window.setInterval(() => {
+      if (document.visibilityState !== 'visible') return;
+      fetch('/api/guards').then((res) => res.json()).then((data) => { if (data.guards) setGuards(data.guards); }).catch((e) => console.error(e));
+      fetch('/api/tenders').then((res) => res.json()).then((data) => { if (data.tenders) setTenders(data.tenders); }).catch((e) => console.error(e));
+    }, 10000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const stats = [

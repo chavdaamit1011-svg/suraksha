@@ -5,7 +5,7 @@ import { Lead } from '@/lib/models/Lead';
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { fullName, email, phone, location, guardType, guardCount, shiftType, company } = data;
+    const { fullName, email, phone, location, guardType, guardCount, shiftType, company, startDate, endDate, shiftStart, shiftEnd, specialRequirements } = data;
 
     if (!fullName || !email || !phone || !guardCount) {
       return NextResponse.json({ success: false, message: 'All required fields must be filled.' }, { status: 400 });
@@ -22,10 +22,11 @@ export async function POST(req: Request) {
       contactPerson: fullName,
       phone,
       email,
-      source: 'Website Book Guard Form',
-      leadType: guardType.includes('Armed') ? 'Armed VIP Escort' : 'Individual Guard',
+      // Use the established Lead enum values so this endpoint also works with an already-running MongoDB model.
+      source: 'Website Contact',
+      leadType: 'Individual Guard',
       status: 'New',
-      notes: `Location: ${location} | Guards: ${guardCount} | Shift: ${shiftType}`,
+      notes: `Booking Form | Guard Type: ${guardType} | Location: ${location} | Guards per shift: ${guardCount} | Shift: ${shiftType}${shiftStart && shiftEnd ? ` (${shiftStart}–${shiftEnd})` : ''}${startDate ? ` | Start: ${startDate}` : ''}${endDate ? ` | End: ${endDate}` : ''}${specialRequirements ? ` | Requirements: ${specialRequirements}` : ''}`,
     });
 
     return NextResponse.json({

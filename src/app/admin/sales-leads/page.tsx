@@ -21,6 +21,10 @@ export default function SalesLeadsPage() {
 
   useEffect(() => {
     fetchLeads();
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === 'visible') fetchLeads();
+    }, 5000);
+    return () => window.clearInterval(timer);
   }, []);
 
   const fetchLeads = async () => {
@@ -67,7 +71,7 @@ export default function SalesLeadsPage() {
             <h1 className="text-2xl font-bold theme-app-heading flex items-center gap-2">
               <PhoneForwarded className="w-6 h-6 text-[#F5C623]" /> Sales & Field Leads Logger Desk
             </h1>
-            <p className="text-xs theme-app-body">Live dynamic database of customer inquiries and website bookings.</p>
+            <p className="text-xs theme-app-body">Live database of customer inquiries and website bookings. Auto-syncs every 5 seconds.</p>
           </div>
 
           <button
