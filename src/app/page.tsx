@@ -63,32 +63,13 @@ export default function HomePage() {
     },
   };
 
-  const testimonials = [
-    {
-      id: 1,
-      name: 'Rajiv Malhotra',
-      role: 'Head of Facilities, Global Tech Park',
-      content:
-        'SURAKSHA transformed our campus security. Their guards are highly disciplined, verified, and equipped with body cams. The live command tracking gives us 100% peace of mind.',
-      rating: 5,
-    },
-    {
-      id: 2,
-      name: 'Priya Sundaram',
-      role: 'Director of Operations, Metro Logistics',
-      content:
-        'We signed a 2-year B2B tender for 20 perimeter guards. Their incident response time is under 5 minutes. Outstanding professionalism and government certification compliance.',
-      rating: 5,
-    },
-    {
-      id: 3,
-      name: 'Anil Kapoor',
-      role: 'General Manager, Infinity Malls',
-      content:
-        'The quick guard booking feature allowed us to deploy 10 extra crowd-control officers within 3 hours for a major celebrity event. Highly recommended!',
-      rating: 5,
-    },
-  ];
+  const [testimonials, setTestimonials] = useState<any[]>([]);
+  const [review, setReview] = useState({ name: '', role: '', company: '', content: '', rating: 5 });
+  const [reviewMessage, setReviewMessage] = useState('');
+  const [showReviewForm, setShowReviewForm] = useState(false);
+
+  useEffect(() => { fetch('/api/testimonials').then((response) => response.json()).then((data) => { if (data.success) setTestimonials(data.testimonials); }); }, []);
+  const submitReview = async (event: React.FormEvent) => { event.preventDefault(); const response = await fetch('/api/testimonials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(review) }); const data = await response.json(); setReviewMessage(data.message || 'Unable to submit review.'); if (data.success) setReview({ name: '', role: '', company: '', content: '', rating: 5 }); };
 
   return (
     <div className="min-h-screen theme-app-bg font-sans selection:bg-[#F5C623] selection:text-[#0B0D0F] relative overflow-hidden transition-colors duration-300">
@@ -390,7 +371,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {testimonials.map((t) => (
-                <div key={t.id} className="theme-app-card p-8 rounded-3xl space-y-4 hover:border-[#F5C623]/30 transition">
+                <div key={t._id} className="theme-app-card p-8 rounded-3xl space-y-4 hover:border-[#F5C623]/30 transition">
                   <div className="flex items-center gap-1 text-[#F5C623]">
                     {[...Array(t.rating)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 fill-[#F5C623] text-[#F5C623]" />
@@ -404,6 +385,9 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
+            {testimonials.length === 0 && <p className="text-center text-xs theme-app-body">Approved client reviews will appear here.</p>}
+            <div className="text-center"><button onClick={() => { setShowReviewForm(true); setReviewMessage(''); }} className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[#F5C623]/50 text-[#F5C623] hover:bg-[#F5C623] hover:text-[#0B0D0F] text-xs font-bold transition"><Star className="w-4 h-4" /> Add Your Review</button><p className="text-[11px] theme-app-body mt-2">Reviews are published after admin approval.</p></div>
+            {showReviewForm && <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4"><form onSubmit={submitReview} className="w-full max-w-xl theme-app-card border border-[#F5C623]/40 rounded-3xl p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs shadow-2xl"><div className="sm:col-span-2 flex justify-between gap-4"><div><h4 className="text-lg font-bold theme-app-heading">Share your experience</h4><p className="theme-app-body mt-1">Your review is published after admin approval.</p></div><button type="button" onClick={() => setShowReviewForm(false)} className="text-xl theme-app-body hover:text-rose-400">×</button></div><input required placeholder="Your name" value={review.name} onChange={(e) => setReview({ ...review, name: e.target.value })} className="theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /><input placeholder="Role / designation" value={review.role} onChange={(e) => setReview({ ...review, role: e.target.value })} className="theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /><input placeholder="Company / agency (optional)" value={review.company} onChange={(e) => setReview({ ...review, company: e.target.value })} className="sm:col-span-2 theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /><div className="sm:col-span-2"><p className="theme-app-heading font-bold mb-2">Your rating</p><div className="flex gap-2">{[1, 2, 3, 4, 5].map((rating) => <button type="button" key={rating} onClick={() => setReview({ ...review, rating })} aria-label={`${rating} star rating`} className="p-1"><Star className={`w-7 h-7 transition ${rating <= review.rating ? 'fill-[#F5C623] text-[#F5C623]' : 'text-slate-500 hover:text-[#F5C623]'}`} /></button>)}</div></div><textarea required rows={4} placeholder="Write your review..." value={review.content} onChange={(e) => setReview({ ...review, content: e.target.value })} className="sm:col-span-2 theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /><button className="sm:col-span-2 trust-yellow-btn py-3 rounded-xl text-xs font-bold">Submit Review for Approval</button>{reviewMessage && <p className="sm:col-span-2 text-center text-xs text-emerald-500">{reviewMessage}</p>}</form></div>}
           </div>
 
         </div>

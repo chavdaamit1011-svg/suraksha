@@ -1,45 +1,17 @@
 'use client';
 
-import React from 'react';
+import { useEffect, useState } from 'react';
 import AdminSidebar from '@/components/AdminSidebar';
-import { AlertTriangle, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, Loader2 } from 'lucide-react';
+
+type Incident = { _id: string; incidentId: string; title: string; site: string; severity: string; status: string; reportedBy: string; description: string; createdAt: string };
 
 export default function IncidentDeskPage() {
-  const incidents = [
-    { id: 'INC-2026-881', title: 'Unauthorized Parking Gate Access Attempt', site: 'Metro Heights Mall Gate 2', severity: 'Medium', status: 'Resolved', reportedBy: 'Rajesh Kumar (SUR-G8842)', date: '28 Jul 2026' },
-  ];
-
-  return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
-      <AdminSidebar />
-
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
-        <div className="pb-4 border-b border-slate-900">
-          <h1 className="text-2xl font-black text-white flex items-center gap-2">
-            <AlertTriangle className="w-6 h-6 text-amber-400" /> Incident Management Desk
-          </h1>
-          <p className="text-xs text-slate-400">Log, track, and resolve emergency security incidents reported across client sites.</p>
-        </div>
-
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <h3 className="text-sm font-bold text-amber-400">Reported Site Incidents</h3>
-          <div className="space-y-3 text-xs">
-            {incidents.map((inc) => (
-              <div key={inc.id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                <div>
-                  <span className="font-mono text-amber-400 font-bold">{inc.id}</span>
-                  <h5 className="font-bold text-white text-sm">{inc.title}</h5>
-                  <p className="text-slate-400">{inc.site} • Reported by: {inc.reportedBy}</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-emerald-400 font-bold">{inc.status}</span>
-                  <p className="text-slate-400 text-[10px]">{inc.date}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </main>
-    </div>
-  );
+  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [loading, setLoading] = useState(true);
+  const load = () => fetch('/api/incidents').then((response) => response.json()).then((data) => { if (data.success) setIncidents(data.incidents); }).finally(() => setLoading(false));
+  useEffect(() => { load(); const timer = window.setInterval(() => { if (document.visibilityState === 'visible') load(); }, 5000); return () => window.clearInterval(timer); }, []);
+  const updateStatus = async (id: string, status: string) => { const response = await fetch('/api/incidents', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, status }) }); const data = await response.json(); if (data.success) setIncidents((current) => current.map((item) => item._id === id ? data.incident : item)); };
+  const severityColor: Record<string, string> = { Low: 'text-blue-400 bg-blue-500/10', Medium: 'text-amber-400 bg-amber-500/10', High: 'text-orange-400 bg-orange-500/10', Critical: 'text-rose-400 bg-rose-500/10' };
+  return <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans"><AdminSidebar /><main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto"><div className="pb-4 border-b border-slate-900"><h1 className="text-2xl font-black text-white flex items-center gap-2"><AlertTriangle className="w-6 h-6 text-amber-400" /> Incident Management Desk</h1><p className="text-xs text-slate-400">Live incident reports from the Support page. Auto-syncs every 5 seconds.</p></div><div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4"><h3 className="text-sm font-bold text-amber-400">Reported Site Incidents ({incidents.length})</h3>{loading ? <div className="p-10 flex justify-center gap-2 text-xs text-slate-400"><Loader2 className="w-4 h-4 animate-spin" /> Loading incidents...</div> : incidents.length === 0 ? <p className="p-10 text-center text-xs text-slate-400">No incident reports received yet.</p> : <div className="space-y-3 text-xs">{incidents.map((incident) => <div key={incident._id} className="p-5 rounded-2xl bg-slate-950 border border-slate-800"><div className="flex flex-col sm:flex-row justify-between gap-4"><div><span className="font-mono text-amber-400 font-bold">{incident.incidentId}</span><h5 className="font-bold text-white text-sm mt-1">{incident.title}</h5><p className="text-slate-400 mt-1">{incident.site} · Reported by: {incident.reportedBy}</p><p className="mt-3 p-3 rounded-xl bg-slate-900 text-slate-300">{incident.description}</p></div><div className="flex sm:flex-col items-start sm:items-end gap-2"><span className={`px-2.5 py-1 rounded-full font-bold ${severityColor[incident.severity] || severityColor.Medium}`}>{incident.severity}</span><select value={incident.status} onChange={(e) => updateStatus(incident._id, e.target.value)} className="bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white outline-none"><option>Open</option><option>Investigating</option><option>Resolved</option><option>Closed</option></select><span className="text-slate-500 text-[10px]">{new Date(incident.createdAt).toLocaleString()}</span></div></div></div>)}</div>}</div></main></div>;
 }

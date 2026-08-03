@@ -29,6 +29,7 @@ import {
   UserCheck,
   Crown,
   Mail,
+  Star,
 } from 'lucide-react';
 
 export default function AdminSidebar() {
@@ -98,6 +99,7 @@ export default function AdminSidebar() {
         { name: 'Branch Offices', href: '/admin/branches', icon: Building2 },
         { name: 'Website Contact Leads', href: '/admin/support-desk', icon: HelpCircle },
         { name: 'Newsletter Subscribers', href: '/admin/newsletter', icon: Mail },
+        { name: 'Review Moderation', href: '/admin/reviews', icon: Star },
         { name: 'GTM & Campaign Ads', href: '/admin/gtm', icon: Globe },
         { name: 'Operations Analytics', href: '/admin/analytics', icon: Globe },
         { name: 'Exportable Reports', href: '/admin/reports', icon: Download },
