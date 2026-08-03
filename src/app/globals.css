@@ -178,6 +178,16 @@ select:-webkit-autofill {
   margin: 0;
 }
 
+/* Horizontal carousels remain swipe/scroll enabled without a visible browser scrollbar. */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 7px;

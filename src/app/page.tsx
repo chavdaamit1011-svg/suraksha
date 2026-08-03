@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -16,6 +16,7 @@ import {
   Star,
   Lock,
   ChevronRight,
+  ChevronLeft,
   PhoneCall,
   Activity,
   Compass,
@@ -64,12 +65,14 @@ export default function HomePage() {
   };
 
   const [testimonials, setTestimonials] = useState<any[]>([]);
-  const [review, setReview] = useState({ name: '', role: '', company: '', content: '', rating: 5 });
+  const [review, setReview] = useState({ name: '', email: '', phone: '', role: '', company: '', content: '', rating: 5 });
   const [reviewMessage, setReviewMessage] = useState('');
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const testimonialScroller = useRef<HTMLDivElement>(null);
+  const scrollTestimonials = (direction: number) => testimonialScroller.current?.scrollBy({ left: direction * 390, behavior: 'smooth' });
 
   useEffect(() => { fetch('/api/testimonials').then((response) => response.json()).then((data) => { if (data.success) setTestimonials(data.testimonials); }); }, []);
-  const submitReview = async (event: React.FormEvent) => { event.preventDefault(); const response = await fetch('/api/testimonials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(review) }); const data = await response.json(); setReviewMessage(data.message || 'Unable to submit review.'); if (data.success) setReview({ name: '', role: '', company: '', content: '', rating: 5 }); };
+  const submitReview = async (event: React.FormEvent) => { event.preventDefault(); const response = await fetch('/api/testimonials', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(review) }); const data = await response.json(); setReviewMessage(data.message || 'Unable to submit review.'); if (data.success) setReview({ name: '', email: '', phone: '', role: '', company: '', content: '', rating: 5 }); };
 
   return (
     <div className="min-h-screen theme-app-bg font-sans selection:bg-[#F5C623] selection:text-[#0B0D0F] relative overflow-hidden transition-colors duration-300">
@@ -369,16 +372,17 @@ export default function HomePage() {
               <h3 className="text-3xl font-bold theme-app-heading">What Our Clients Say</h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.length > 3 && <div className="flex justify-end gap-2 -mt-4"><button aria-label="Previous reviews" onClick={() => scrollTestimonials(-1)} className="w-9 h-9 rounded-full theme-app-card border border-slate-300 dark:border-slate-800 hover:border-[#F5C623] text-[#F5C623] flex items-center justify-center"><ChevronLeft className="w-4 h-4" /></button><button aria-label="Next reviews" onClick={() => scrollTestimonials(1)} className="w-9 h-9 rounded-full theme-app-card border border-slate-300 dark:border-slate-800 hover:border-[#F5C623] text-[#F5C623] flex items-center justify-center"><ChevronRight className="w-4 h-4" /></button></div>}
+            <div ref={testimonialScroller} className="no-scrollbar flex gap-6 overflow-x-auto pb-2 snap-x snap-mandatory scroll-smooth">
               {testimonials.map((t) => (
-                <div key={t._id} className="theme-app-card p-8 rounded-3xl space-y-4 hover:border-[#F5C623]/30 transition">
+                <div key={t._id} className="min-w-[300px] sm:min-w-[360px] max-w-[420px] min-h-[230px] snap-start theme-app-card p-8 rounded-3xl space-y-4 hover:border-[#F5C623]/30 transition flex flex-col">
                   <div className="flex items-center gap-1 text-[#F5C623]">
                     {[...Array(t.rating)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 fill-[#F5C623] text-[#F5C623]" />
                     ))}
                   </div>
                   <p className="theme-app-body text-xs italic leading-relaxed">&quot;{t.content}&quot;</p>
-                  <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+                  <div className="pt-4 mt-auto border-t border-slate-200 dark:border-slate-800">
                     <h5 className="font-bold theme-app-heading text-sm">{t.name}</h5>
                     <p className="text-[10px] text-[#F5C623] font-semibold">{t.role}</p>
                   </div>
@@ -394,6 +398,7 @@ export default function HomePage() {
       </section>
 
       <Footer />
+      {showReviewForm && <div className="fixed inset-0 z-[60] bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4"><form onSubmit={submitReview} className="w-full max-w-xl theme-app-card border border-[#F5C623]/40 rounded-3xl p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs shadow-2xl"><div className="sm:col-span-2 flex justify-between"><div><h4 className="text-lg font-bold theme-app-heading">Share your experience</h4><p className="theme-app-body mt-1">Your details stay private; only approved reviews are published.</p></div><button type="button" onClick={() => setShowReviewForm(false)} className="text-xl theme-app-body hover:text-rose-400">Close</button></div><input required placeholder="Your name" value={review.name} onChange={(e) => setReview({ ...review, name: e.target.value })} className="theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /><input required type="email" placeholder="Email address" value={review.email} onChange={(e) => setReview({ ...review, email: e.target.value })} className="theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /><input required type="tel" placeholder="Phone number" value={review.phone} onChange={(e) => setReview({ ...review, phone: e.target.value })} className="theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /><input placeholder="Role / designation" value={review.role} onChange={(e) => setReview({ ...review, role: e.target.value })} className="theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /><input placeholder="Company / agency (optional)" value={review.company} onChange={(e) => setReview({ ...review, company: e.target.value })} className="sm:col-span-2 theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /><div className="sm:col-span-2"><p className="theme-app-heading font-bold mb-2">Your rating</p><div className="flex gap-2">{[1, 2, 3, 4, 5].map((rating) => <button type="button" key={rating} onClick={() => setReview({ ...review, rating })} className="p-1"><Star className={`w-7 h-7 ${rating <= review.rating ? 'fill-[#F5C623] text-[#F5C623]' : 'text-slate-500'}`} /></button>)}</div></div><textarea required rows={4} placeholder="Write your review..." value={review.content} onChange={(e) => setReview({ ...review, content: e.target.value })} className="sm:col-span-2 theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /><button className="sm:col-span-2 trust-yellow-btn py-3 rounded-xl text-xs font-bold">Submit Review for Approval</button>{reviewMessage && <p className="sm:col-span-2 text-center text-xs text-emerald-500">{reviewMessage}</p>}</form></div>}
     </div>
   );
 }
