@@ -7,7 +7,7 @@ const JWT_SECRET = process.env.JWT_SECRET || 'suraksha_super_secret_jwt_key_2026
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password, phone, company } = await req.json();
+    const { name, email, password, phone, company, accountType } = await req.json();
 
     if (!name || !email || !password) {
       return NextResponse.json({ success: false, message: 'Name, email and password are required' }, { status: 400 });
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       password,
       phone: phone || '',
       company: company || 'Personal Client Account',
-      accountType: company?.trim() ? 'client' : 'user',
+      accountType: ['individual', 'client', 'agency'].includes(accountType) ? accountType : (company?.trim() ? 'client' : 'individual'),
       role: 'user',
       plan: 'B2C Standard',
       isActive: true,
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
         {
           deviceName: 'Current Web Browser Session',
           ip: '127.0.0.1',
-          lastActive: 'Just now',
+          lastActive: new Date(),
           status: 'Active',
         },
       ],

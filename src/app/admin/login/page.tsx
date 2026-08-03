@@ -31,6 +31,7 @@ export default function AuthPortalPage() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [company, setCompany] = useState('');
+  const [accountType, setAccountType] = useState('individual');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -93,7 +94,7 @@ export default function AuthPortalPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, phone, company }),
+        body: JSON.stringify({ name, email, password, phone, company, accountType }),
       });
 
       const data = await res.json();
@@ -164,7 +165,7 @@ export default function AuthPortalPage() {
       <div className="w-full max-w-lg theme-app-card rounded-3xl p-8 sm:p-10 shadow-2xl relative z-10 border border-[#F5C623]/30 space-y-7">
         
         {/* Brand Header */}
-        <div className="text-center space-y-3">
+        <div className="flex flex-col items-center text-center space-y-3">
           <Link href="/" className="inline-block">
             <Logo size="lg" className="justify-center" />
           </Link>
@@ -325,9 +326,19 @@ export default function AuthPortalPage() {
                   </div>
                 </div>
 
+                <div>
+                  <label className="text-xs font-bold theme-app-heading block mb-1">5. Account Type *</label>
+                  <select value={accountType} onChange={(e) => setAccountType(e.target.value)} className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl px-4 py-3 text-xs theme-app-heading outline-none transition">
+                    <option value="individual">Individual User</option>
+                    <option value="client">Business / Client</option>
+                    <option value="agency">Security Agency Partner</option>
+                  </select>
+                  <p className="text-[10px] theme-app-body mt-1">This helps SURAKSHA route your account to the correct admin list.</p>
+                </div>
+
                 {/* 5. Password */}
                 <div>
-                  <label className="text-xs font-bold theme-app-heading block mb-1">5. Password</label>
+                  <label className="text-xs font-bold theme-app-heading block mb-1">6. Password</label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
                     <input
@@ -350,7 +361,7 @@ export default function AuthPortalPage() {
 
                 {/* 6. Confirm Password */}
                 <div>
-                  <label className="text-xs font-bold theme-app-heading block mb-1">6. Confirm Password</label>
+                  <label className="text-xs font-bold theme-app-heading block mb-1">7. Confirm Password</label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
                     <input
