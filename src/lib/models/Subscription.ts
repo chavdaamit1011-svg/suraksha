@@ -11,6 +11,8 @@ const SubscriptionSchema = new Schema({
   guardCount: { type: Number, default: 1 },
   duration: { type: String, default: '1 Month' },
   status: { type: String, enum: ['New', 'Contacted', 'Active', 'Cancelled'], default: 'New' },
+  paymentId: { type: String, default: '' },
+  paymentStatus: { type: String, enum: ['Pending', 'Paid'], default: 'Pending' },
 }, { timestamps: true });
 
 export const Subscription = models.Subscription || model('Subscription', SubscriptionSchema);

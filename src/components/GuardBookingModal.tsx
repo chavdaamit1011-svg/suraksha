@@ -3,6 +3,17 @@
 import React, { useState } from 'react';
 import { X, ShieldCheck, Calendar, Users, Building, Phone, Mail, CheckCircle2 } from 'lucide-react';
 
+declare global { interface Window { Razorpay?: new (options: Record<string, unknown>) => { open: () => void }; } }
+
+const loadRazorpay = () => new Promise<boolean>((resolve) => {
+  if (window.Razorpay) return resolve(true);
+  const script = document.createElement('script');
+  script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+  script.onload = () => resolve(true);
+  script.onerror = () => resolve(false);
+  document.body.appendChild(script);
+});
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -27,9 +38,22 @@ export default function GuardBookingModal({ isOpen, onClose, subscriptionPlan }:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (subscriptionPlan) {
-      const response = await fetch('/api/subscriptions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...formData, planName: subscriptionPlan, planType: subscriptionPlan === 'Enterprise Command' ? 'Custom / Enterprise' : 'Subscription' }) });
-      const data = await response.json();
-      if (!data.success) { alert(data.message || 'Unable to submit plan request.'); return; }
+      if (subscriptionPlan === 'Enterprise Command') { window.location.href = '/contact?plan=Enterprise%20Command'; return; }
+      const orderResponse = await fetch('/api/payments/razorpay/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ planName: subscriptionPlan }) });
+      const orderData = await orderResponse.json();
+      if (!orderData.success) { alert(orderData.message || 'Unable to start payment.'); return; }
+      const loaded = await loadRazorpay();
+      if (!loaded || !window.Razorpay) { alert('Unable to load Razorpay checkout. Please try again.'); return; }
+      new window.Razorpay({ key: orderData.keyId, amount: orderData.order.amount, currency: 'INR', name: 'SURAKSHA Security', description: `${subscriptionPlan} subscription`, order_id: orderData.order.id, prefill: { name: formData.fullName, email: formData.email, contact: formData.phone }, theme: { color: '#F5C623' }, handler: async (payment: Record<string, string>) => {
+        const verifyResponse = await fetch('/api/payments/razorpay/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payment) });
+        const verifyData = await verifyResponse.json();
+        if (!verifyData.success) { alert(verifyData.message || 'Payment verification failed.'); return; }
+        const subscriptionResponse = await fetch('/api/subscriptions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...formData, planName: subscriptionPlan, planType: 'Subscription', status: 'Active', paymentStatus: 'Paid', paymentId: payment.razorpay_payment_id }) });
+        const subscriptionData = await subscriptionResponse.json();
+        if (!subscriptionData.success) { alert(subscriptionData.message || 'Payment received but subscription could not be saved. Contact support with your payment ID.'); return; }
+        setSubmitted(true);
+      } }).open();
+      return;
     }
     setSubmitted(true);
     setTimeout(() => {
