@@ -1,0 +1,22 @@
+'use client';
+
+import { FormEvent, useState } from 'react';
+import Link from 'next/link';
+import Logo from '@/components/Logo';
+import { AlertCircle, CheckCircle2, KeyRound, Lock, Mail } from 'lucide-react';
+
+export default function ResetPasswordPage() {
+  const [email, setEmail] = useState('');
+  const [otp, setOtp] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const sendOtp = async (event: FormEvent) => { event.preventDefault(); setLoading(true); setError(''); const response = await fetch('/api/auth/otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'send', email }) }); const data = await response.json(); setLoading(false); if (data.success) { setOtpSent(true); setMessage('A verification code has been sent to your email.'); } else setError(data.message || 'Unable to send OTP.'); };
+  const resetPassword = async (event: FormEvent) => { event.preventDefault(); if (password !== confirmPassword) { setError('Passwords do not match.'); return; } setLoading(true); setError(''); const response = await fetch('/api/auth/otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'reset-password', email, otp, password }) }); const data = await response.json(); setLoading(false); if (data.success) setMessage(data.message); else setError(data.message || 'Unable to reset password.'); };
+
+  return <div className="min-h-screen theme-app-bg flex items-center justify-center p-4 font-sans"><main className="w-full max-w-md theme-app-card border border-[#F5C623]/30 rounded-3xl p-8 space-y-6"><div className="flex flex-col items-center text-center gap-3"><Link href="/"><Logo size="lg" /></Link><h1 className="text-xl font-bold theme-app-heading">Reset your password</h1><p className="text-xs theme-app-body">Verify your email with an OTP, then choose a new password.</p></div>{error && <p className="p-3 rounded-xl text-xs text-rose-500 bg-rose-500/10 flex gap-2"><AlertCircle className="w-4 h-4" />{error}</p>}{message && <p className="p-3 rounded-xl text-xs text-emerald-500 bg-emerald-500/10 flex gap-2"><CheckCircle2 className="w-4 h-4" />{message}</p>}{!otpSent ? <form onSubmit={sendOtp} className="space-y-4"><label className="block text-xs font-bold theme-app-heading">Registered email<input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5 w-full theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /></label><button disabled={loading} className="w-full trust-yellow-btn rounded-xl py-3 text-xs font-bold flex justify-center gap-2"><Mail className="w-4 h-4" />{loading ? 'Sending...' : 'Send reset OTP'}</button></form> : <form onSubmit={resetPassword} className="space-y-4"><label className="block text-xs font-bold theme-app-heading">OTP<input required maxLength={6} value={otp} onChange={(e) => setOtp(e.target.value)} className="mt-1.5 w-full theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /></label><label className="block text-xs font-bold theme-app-heading">New password<input required minLength={6} type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1.5 w-full theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /></label><label className="block text-xs font-bold theme-app-heading">Confirm new password<input required minLength={6} type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="mt-1.5 w-full theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" /></label><button disabled={loading} className="w-full trust-yellow-btn rounded-xl py-3 text-xs font-bold flex justify-center gap-2"><KeyRound className="w-4 h-4" />{loading ? 'Resetting...' : 'Reset password'}</button></form>}<p className="text-center text-xs theme-app-body"><Link href="/admin/login" className="text-[#F5C623] font-bold">Back to sign in</Link></p></main></div>;
+}

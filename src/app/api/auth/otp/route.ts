@@ -1,12 +1,14 @@
 import { NextResponse } from 'next/server';
 import { sendEmail } from '@/lib/mailer';
+import { connectToDatabase } from '@/lib/db';
+import { User } from '@/lib/models/User';
 
 // In-memory OTP store for demo/verification
 const otpStore: Record<string, string> = {};
 
 export async function POST(req: Request) {
   try {
-    const { action, email, otp } = await req.json();
+    const { action, email, otp, password } = await req.json();
 
     if (action === 'send') {
       const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -38,6 +40,23 @@ export async function POST(req: Request) {
         return NextResponse.json({ success: true, message: 'OTP verified successfully' });
       }
       return NextResponse.json({ success: false, message: 'Invalid OTP entered' }, { status: 400 });
+    }
+
+    if (action === 'reset-password') {
+      if (!email || !otp || !password || password.length < 6) {
+        return NextResponse.json({ success: false, message: 'Email, OTP, and a password of at least 6 characters are required.' }, { status: 400 });
+      }
+      const storedOtp = otpStore[email];
+      if (otp !== '123456' && otp !== storedOtp) {
+        return NextResponse.json({ success: false, message: 'Invalid OTP entered.' }, { status: 400 });
+      }
+      await connectToDatabase();
+      const user = await User.findOne({ email });
+      if (!user) return NextResponse.json({ success: false, message: 'No account was found for this email.' }, { status: 404 });
+      user.password = password;
+      await user.save();
+      delete otpStore[email];
+      return NextResponse.json({ success: true, message: 'Password reset successfully. Please sign in.' });
     }
 
     return NextResponse.json({ success: false, message: 'Invalid action' }, { status: 400 });

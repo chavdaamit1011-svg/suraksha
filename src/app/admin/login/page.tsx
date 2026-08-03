@@ -249,6 +249,10 @@ export default function AuthPortalPage() {
                   </div>
                 </div>
 
+                <div className="text-right -mt-1">
+                  <Link href="/reset-password" className="text-[11px] font-bold text-[#F5C623] hover:underline">Forgot password?</Link>
+                </div>
+
                 <button
                   type="submit"
                   disabled={loading}
