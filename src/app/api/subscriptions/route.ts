@@ -1,0 +1,7 @@
+import { NextResponse } from 'next/server';
+import { connectToDatabase } from '@/lib/db';
+import { Subscription } from '@/lib/models/Subscription';
+
+export async function GET() { try { await connectToDatabase(); return NextResponse.json({ success: true, subscriptions: await Subscription.find().sort({ createdAt: -1 }).lean() }); } catch (error: any) { return NextResponse.json({ success: false, message: error.message }, { status: 500 }); } }
+export async function POST(req: Request) { try { const data = await req.json(); if (!data.planName || !data.fullName || !data.email || !data.phone) return NextResponse.json({ success: false, message: 'Plan, name, email and phone are required.' }, { status: 400 }); await connectToDatabase(); const subscription = await Subscription.create(data); return NextResponse.json({ success: true, subscription, message: 'Plan request submitted. Our team will contact you shortly.' }); } catch (error: any) { return NextResponse.json({ success: false, message: error.message }, { status: 500 }); } }
+export async function PATCH(req: Request) { try { const { id, status } = await req.json(); await connectToDatabase(); const subscription = await Subscription.findByIdAndUpdate(id, { status }, { new: true }); return NextResponse.json({ success: true, subscription }); } catch (error: any) { return NextResponse.json({ success: false, message: error.message }, { status: 500 }); } }

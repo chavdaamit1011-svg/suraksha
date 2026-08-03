@@ -6,14 +6,16 @@ import { X, ShieldCheck, Calendar, Users, Building, Phone, Mail, CheckCircle2 } 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  subscriptionPlan?: string;
 }
 
-export default function GuardBookingModal({ isOpen, onClose }: ModalProps) {
+export default function GuardBookingModal({ isOpen, onClose, subscriptionPlan }: ModalProps) {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
     email: '',
+    company: '',
     serviceType: 'Corporate Security Guards',
     guardCount: 2,
     duration: '1 Month',
@@ -22,8 +24,13 @@ export default function GuardBookingModal({ isOpen, onClose }: ModalProps) {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (subscriptionPlan) {
+      const response = await fetch('/api/subscriptions', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...formData, planName: subscriptionPlan, planType: subscriptionPlan === 'Enterprise Command' ? 'Custom / Enterprise' : 'Subscription' }) });
+      const data = await response.json();
+      if (!data.success) { alert(data.message || 'Unable to submit plan request.'); return; }
+    }
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
@@ -44,7 +51,7 @@ export default function GuardBookingModal({ isOpen, onClose }: ModalProps) {
         {submitted ? (
           <div className="py-12 text-center space-y-4">
             <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto animate-bounce" />
-            <h3 className="text-2xl font-bold text-amber-400">Booking Request Received!</h3>
+            <h3 className="text-2xl font-bold text-amber-400">{subscriptionPlan ? 'Plan Request Received!' : 'Booking Request Received!'}</h3>
             <p className="text-slate-300">
               Our Security Dispatch Command will review your deployment requirements and call you at{' '}
               <span className="text-amber-400 font-semibold">{formData.phone || 'your number'}</span> within 15 minutes.
@@ -55,8 +62,8 @@ export default function GuardBookingModal({ isOpen, onClose }: ModalProps) {
             <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
               <ShieldCheck className="w-8 h-8 text-amber-400" />
               <div>
-                <h3 className="text-xl font-bold text-amber-400">Book Verified Guards & Services</h3>
-                <p className="text-xs text-slate-400">Deploy Govt & ISO certified armed or unarmed officers instantly.</p>
+                <h3 className="text-xl font-bold text-amber-400">{subscriptionPlan ? `Choose ${subscriptionPlan}` : 'Book Verified Guards & Services'}</h3>
+                <p className="text-xs text-slate-400">{subscriptionPlan ? 'Submit your details for subscription activation and verification.' : 'Deploy Govt & ISO certified armed or unarmed officers instantly.'}</p>
               </div>
             </div>
 
@@ -94,6 +101,11 @@ export default function GuardBookingModal({ isOpen, onClose }: ModalProps) {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full mt-1 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none"
                 />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-slate-300">Company / Agency</label>
+                <input type="text" placeholder="Company name (optional)" value={formData.company} onChange={(e) => setFormData({ ...formData, company: e.target.value })} className="w-full mt-1 bg-slate-950 border border-slate-800 focus:border-amber-500 rounded-lg px-3 py-2 text-sm text-slate-100 outline-none" />
               </div>
 
               <div>
@@ -140,7 +152,7 @@ export default function GuardBookingModal({ isOpen, onClose }: ModalProps) {
               type="submit"
               className="w-full mt-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold py-3 rounded-lg shadow-lg shadow-amber-500/20 transition flex items-center justify-center gap-2"
             >
-              <ShieldCheck className="w-5 h-5" /> Confirm Guard Deployment Request
+              <ShieldCheck className="w-5 h-5" /> {subscriptionPlan ? 'Submit Plan Request' : 'Confirm Guard Deployment Request'}
             </button>
           </form>
         )}

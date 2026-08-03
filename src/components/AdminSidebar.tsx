@@ -89,6 +89,7 @@ export default function AdminSidebar() {
       title: 'FINANCE & PAYROLL',
       items: [
         { name: 'Guard Payroll & Invoicing', href: '/admin/payroll', icon: DollarSign },
+        { name: 'Subscription Plans', href: '/admin/subscriptions', icon: FileCheck },
         { name: 'Statutory Compliance', href: '/admin/compliance', icon: FileText },
       ],
     },
