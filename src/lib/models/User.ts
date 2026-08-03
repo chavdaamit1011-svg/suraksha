@@ -13,6 +13,7 @@ const UserSchema = new Schema(
     },
     designation: { type: String, default: 'Client Member' },
     company: { type: String, default: '' },
+    accountType: { type: String, enum: ['client', 'user'], default: 'user' },
     isActive: { type: Boolean, default: true },
     permissions: [{ type: String }], // Module keys: 'guards', 'tenders', 'sales-leads', 'incidents', 'assets', 'live-tracking', 'payroll', 'compliance', 'support-desk', 'cms'
     lastLogin: { type: Date, default: Date.now },

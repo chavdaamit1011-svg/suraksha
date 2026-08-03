@@ -2,12 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/AdminSidebar';
-import { PhoneForwarded, Plus, Loader2 } from 'lucide-react';
+import { PhoneForwarded, Plus, Loader2, Search } from 'lucide-react';
 
 export default function SalesLeadsPage() {
   const [leads, setLeads] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [query, setQuery] = useState('');
   const [newLead, setNewLead] = useState({
     clientName: '',
     contactPerson: '',
@@ -54,6 +55,8 @@ export default function SalesLeadsPage() {
     }
   };
 
+  const filteredLeads = leads.filter((lead) => `${lead.leadId} ${lead.clientName} ${lead.contactPerson} ${lead.phone} ${lead.email} ${lead.source} ${lead.leadType} ${lead.status}`.toLowerCase().includes(query.toLowerCase()));
+
   return (
     <div className="flex min-h-screen theme-app-bg font-sans">
       <AdminSidebar />
@@ -76,7 +79,7 @@ export default function SalesLeadsPage() {
         </div>
 
         <div className="theme-app-card border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-4">
-          <h3 className="text-sm font-bold text-[#F5C623]">Logged Leads Roster ({leads.length})</h3>
+          <div className="flex flex-col sm:flex-row gap-3 sm:items-center justify-between"><h3 className="text-sm font-bold text-[#F5C623]">Logged Leads Roster ({filteredLeads.length})</h3><div className="relative"><Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search sales leads..." className="pl-9 pr-3 py-2 rounded-xl text-xs theme-app-bg border border-slate-300 dark:border-slate-800 outline-none" /></div></div>
           
           {loading ? (
             <div className="flex items-center justify-center p-12 theme-app-body text-xs gap-2">
@@ -84,7 +87,7 @@ export default function SalesLeadsPage() {
             </div>
           ) : (
             <div className="space-y-3 text-xs">
-              {leads.map((l) => (
+              {filteredLeads.map((l) => (
                 <div key={l._id || l.leadId} className="p-4 rounded-2xl theme-app-bg border border-slate-200 dark:border-slate-800 flex items-center justify-between">
                   <div>
                     <span className="font-mono text-[#F5C623] font-bold">{l.leadId}</span>

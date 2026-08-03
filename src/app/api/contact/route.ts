@@ -16,16 +16,17 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     await connectToDatabase();
-    const { fullName, email, phone, subject, message } = await req.json();
+    const { fullName, companyName, email, phone, subject, message } = await req.json();
 
-    if (!fullName || !email || !message) {
-      return NextResponse.json({ success: false, message: 'Name, email, and message are required.' }, { status: 400 });
+    if (!fullName || !email || !phone || !subject || !message) {
+      return NextResponse.json({ success: false, message: 'Name, email, phone, subject, and message are required.' }, { status: 400 });
     }
 
     const ticketId = `TCK-${Date.now().toString().slice(-6)}`;
     const newTicket = await SupportTicket.create({
       ticketId,
       fullName,
+      companyName: companyName || '',
       email,
       phone: phone || '',
       subject: subject || 'General Inquiry',
@@ -53,5 +54,20 @@ export async function POST(req: Request) {
   } catch (error: any) {
     console.error('Contact submit error:', error);
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const { id, status, adminResponse } = await req.json();
+    if (!id || !['Open', 'In Progress', 'Resolved'].includes(status)) {
+      return NextResponse.json({ success: false, message: 'A ticket and valid status are required.' }, { status: 400 });
+    }
+    await connectToDatabase();
+    const ticket = await SupportTicket.findByIdAndUpdate(id, { status, adminResponse: adminResponse || '' }, { new: true });
+    if (!ticket) return NextResponse.json({ success: false, message: 'Ticket not found.' }, { status: 404 });
+    return NextResponse.json({ success: true, ticket });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, message: error.message || 'Unable to update ticket.' }, { status: 500 });
   }
 }

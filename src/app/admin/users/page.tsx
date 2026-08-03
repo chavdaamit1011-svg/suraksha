@@ -18,7 +18,7 @@ const availableModules = [
 ];
 
 export default function UsersSubscribersPage() {
-  const [activeSubTab, setActiveSubTab] = useState<'admins' | 'subscribers' | 'users'>('admins');
+  const [activeSubTab, setActiveSubTab] = useState<string>('superadmins');
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddAdminModal, setShowAddAdminModal] = useState(false);
@@ -108,8 +108,11 @@ export default function UsersSubscribersPage() {
     }
   };
 
-  const adminsList = users.filter((u) => ['superadmin', 'admin', 'agency'].includes(u.role));
-  const regularUsers = users.filter((u) => u.role === 'user');
+  const superAdmins = users.filter((u) => u.role === 'superadmin');
+  const adminsList = users.filter((u) => ['admin', 'agency'].includes(u.role));
+  const clientAccounts = users.filter((u) => u.role === 'user' && (u.accountType === 'client' || (!u.accountType && u.company && u.company !== 'Personal Client Account')));
+  const normalUsers = users.filter((u) => u.role === 'user' && !clientAccounts.some((client) => client._id === u._id));
+  const visibleAdminAccounts = activeSubTab === 'superadmins' ? superAdmins : adminsList;
 
   return (
     <div className="flex min-h-screen theme-app-bg font-sans">
@@ -141,30 +144,30 @@ export default function UsersSubscribersPage() {
         )}
 
         {/* Sub Tab Buttons */}
-        <div className="flex gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div className="flex flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <button
+            onClick={() => setActiveSubTab('superadmins')}
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
+              activeSubTab === 'superadmins' ? 'trust-yellow-btn shadow-md' : 'theme-app-card hover:text-[#F5C623]'
+            }`}
+          >
+            Super Admin ({superAdmins.length})
+          </button>
           <button
             onClick={() => setActiveSubTab('admins')}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
               activeSubTab === 'admins' ? 'trust-yellow-btn shadow-md' : 'theme-app-card hover:text-[#F5C623]'
             }`}
           >
-            System Admins & RBAC ({adminsList.length})
-          </button>
-          <button
-            onClick={() => setActiveSubTab('users')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition ${
-              activeSubTab === 'users' ? 'trust-yellow-btn shadow-md' : 'theme-app-card hover:text-[#F5C623]'
-            }`}
-          >
-            Registered Clients & Users ({regularUsers.length})
+            System Admins ({adminsList.length})
           </button>
         </div>
 
         {/* 1. ADMINS LIST WITH GRANULAR MODULE PERMISSIONS */}
-        {activeSubTab === 'admins' && (
+        {(activeSubTab === 'superadmins' || activeSubTab === 'admins') && (
           <div className="theme-app-card border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-4">
             <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800">
-              <h3 className="text-sm font-bold text-[#F5C623]">Active Admin Officers & Module Clearance</h3>
+              <h3 className="text-sm font-bold text-[#F5C623]">{activeSubTab === 'superadmins' ? 'Super Admin Access' : 'System Admin Officers & Module Clearance'}</h3>
               <span className="text-[11px] bg-[#F5C623]/20 text-[#F5C623] font-bold px-3 py-1 rounded-full border border-[#F5C623]/30">
                 Super Admin: chavdaamit1011@gmail.com
               </span>
@@ -176,7 +179,7 @@ export default function UsersSubscribersPage() {
               </div>
             ) : (
               <div className="space-y-4">
-                {adminsList.map((a) => (
+                {visibleAdminAccounts.map((a) => (
                   <div key={a._id || a.email} className="p-5 rounded-2xl theme-app-bg border border-slate-200 dark:border-slate-800 space-y-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                       <div className="flex items-center gap-3">
@@ -237,17 +240,20 @@ export default function UsersSubscribersPage() {
         )}
 
         {/* 2. REGISTERED CLIENT USERS */}
-        {activeSubTab === 'users' && (
+        {(activeSubTab === 'clients' || activeSubTab === 'users') && (
           <div className="theme-app-card border border-slate-200 dark:border-slate-800 rounded-3xl p-6 space-y-4">
-            <h3 className="text-sm font-bold text-[#F5C623]">Registered Client Accounts</h3>
+            <div>
+              <h3 className="text-sm font-bold text-[#F5C623]">{activeSubTab === 'clients' ? 'Registered Client Accounts' : 'Registered Normal Users'}</h3>
+              <p className="text-xs theme-app-body mt-1">{activeSubTab === 'clients' ? 'Company/entity accounts are listed separately.' : 'Personal accounts created without a company are listed here.'}</p>
+            </div>
             <div className="space-y-3">
-              {regularUsers.map((u) => (
+              {(activeSubTab === 'clients' ? clientAccounts : normalUsers).map((u) => (
                 <div key={u._id || u.email} className="p-4 rounded-2xl theme-app-bg border border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs">
                   <div>
                     <h5 className="font-bold theme-app-heading text-sm">{u.name}</h5>
                     <p className="theme-app-body">{u.email} • Entity: {u.company || 'Personal Client'}</p>
                   </div>
-                  <span className="text-emerald-500 font-bold text-xs">Client User</span>
+                  <span className="text-emerald-500 font-bold text-xs">{activeSubTab === 'clients' ? 'Client' : 'User'}</span>
                 </div>
               ))}
             </div>

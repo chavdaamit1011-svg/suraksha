@@ -4,6 +4,7 @@ const SupportTicketSchema = new Schema(
   {
     ticketId: { type: String, required: true, unique: true },
     fullName: { type: String, required: true },
+    companyName: { type: String, default: '' },
     email: { type: String, required: true },
     phone: { type: String },
     subject: { type: String, required: true },

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import AdminSidebar from '@/components/AdminSidebar';
-import AdminHeaderSearch from '@/components/AdminHeaderSearch';
 import { DollarSign, FileText, Download, CheckCircle2, Sliders, Calendar, ArrowUpRight } from 'lucide-react';
 
 export default function PayrollPage() {
@@ -33,7 +32,6 @@ export default function PayrollPage() {
             <p className="text-xs text-slate-400 mt-1">Manage guard monthly salaries, client B2B invoice billing, and statutory ledgers.</p>
           </div>
 
-          <AdminHeaderSearch />
         </div>
 
         {/* Finance Sub-Tabs Navigation */}

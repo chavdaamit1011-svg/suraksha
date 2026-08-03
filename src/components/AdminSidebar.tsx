@@ -28,6 +28,7 @@ import {
   ChevronRight,
   UserCheck,
   Crown,
+  Mail,
 } from 'lucide-react';
 
 export default function AdminSidebar() {
@@ -43,10 +44,18 @@ export default function AdminSidebar() {
 
   const menuSections = [
     {
+      title: 'COMMAND CENTER',
+      items: [
+        { name: 'Command Dashboard', href: '/admin', icon: LayoutDashboard },
+        { name: 'Admin Management', href: '/admin/users', icon: UserCheck },
+        { name: 'Client & User Accounts', href: '/admin/client-users', icon: Users },
+      ],
+    },
+    {
       title: '👑 SUPER ADMIN ACCESS CONTROL',
       items: [
-        { name: 'Create Admins & RBAC', href: '/admin/users', icon: UserCheck, highlight: true },
-        { name: 'Command Dashboard', href: '/admin', icon: LayoutDashboard },
+        { name: 'Admin Management', href: '/admin/users', icon: UserCheck },
+        { name: 'Client & User Accounts', href: '/admin/client-users', icon: Users },
       ],
     },
     {
@@ -71,7 +80,7 @@ export default function AdminSidebar() {
       title: 'B2B CONTRACTS & SALES',
       items: [
         { name: 'B2B Bulk Tenders', href: '/admin/tenders', icon: FileCheck },
-        { name: 'Sales & Field Leads', href: '/admin/sales-leads', icon: Briefcase },
+        { name: 'Leads Management', href: '/admin/sales-leads', icon: Briefcase },
         { name: 'PDF Proposal Generator', href: '/admin/knowledge', icon: BookOpen },
       ],
     },
@@ -87,7 +96,8 @@ export default function AdminSidebar() {
       items: [
         { name: 'Website CMS Manager', href: '/admin/cms', icon: Globe },
         { name: 'Branch Offices', href: '/admin/branches', icon: Building2 },
-        { name: 'Support Desk Queries', href: '/admin/support-desk', icon: HelpCircle },
+        { name: 'Website Contact Leads', href: '/admin/support-desk', icon: HelpCircle },
+        { name: 'Newsletter Subscribers', href: '/admin/newsletter', icon: Mail },
         { name: 'GTM & Campaign Ads', href: '/admin/gtm', icon: Globe },
         { name: 'Operations Analytics', href: '/admin/analytics', icon: Globe },
         { name: 'Exportable Reports', href: '/admin/reports', icon: Download },
@@ -110,7 +120,7 @@ export default function AdminSidebar() {
 
       {/* Clean Menu Sections */}
       <div className="flex-1 px-3 py-2 space-y-4 overflow-y-auto max-h-[calc(100vh-120px)]">
-        {menuSections.map((sec, idx) => {
+        {menuSections.filter((sec, sectionIndex) => sectionIndex === 0 || !sec.items.some((item) => item.href === '/admin/users')).map((sec, idx) => {
           const isCollapsed = collapsedSections[sec.title];
           return (
             <div key={idx} className="space-y-1">
@@ -136,20 +146,13 @@ export default function AdminSidebar() {
                         className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition duration-150 ${
                           isActive
                             ? 'bg-amber-500/15 text-amber-400 font-bold border border-amber-500/30 shadow-sm'
-                            : item.highlight
-                            ? 'bg-amber-500/10 text-amber-300 hover:bg-amber-500/20 border border-amber-500/20'
                             : 'text-slate-300 hover:text-amber-400 hover:bg-slate-900'
                         }`}
                       >
                         <div className="flex items-center gap-2.5">
-                          <Icon className={`w-4 h-4 shrink-0 ${isActive || item.highlight ? 'text-amber-400' : 'text-slate-400'}`} />
+                          <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
                           <span className="truncate">{item.name}</span>
                         </div>
-                        {item.highlight && (
-                          <span className="text-[9px] font-bold uppercase bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded-md border border-amber-500/30">
-                            NEW
-                          </span>
-                        )}
                       </Link>
                     );
                   })}

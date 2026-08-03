@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from '@/components/AdminSidebar';
-import AdminHeaderSearch from '@/components/AdminHeaderSearch';
 import {
   Shield,
   FileCheck,
@@ -52,7 +51,6 @@ export default function AdminDashboardPage() {
       <AdminSidebar />
 
       <main className="flex-1 p-6 sm:p-10 space-y-10 overflow-y-auto">
-        {/* Top Header with Global Search */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-slate-850">
           <div>
             <div className="flex items-center gap-2.5">
@@ -61,8 +59,6 @@ export default function AdminDashboardPage() {
             </div>
             <p className="text-xs text-slate-400 mt-1">Super Admin Console: Amit Chavda (chavdaamit1011@gmail.com)</p>
           </div>
-
-          <AdminHeaderSearch />
         </div>
 
         {/* Spacious KPI Stats Grid */}

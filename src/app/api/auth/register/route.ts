@@ -28,6 +28,7 @@ export async function POST(req: Request) {
       password,
       phone: phone || '',
       company: company || 'Personal Client Account',
+      accountType: company?.trim() ? 'client' : 'user',
       role: 'user',
       plan: 'B2C Standard',
       isActive: true,

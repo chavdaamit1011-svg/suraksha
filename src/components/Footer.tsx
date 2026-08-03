@@ -1,15 +1,37 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Logo from './Logo';
-import { PhoneCall, Mail, MapPin, ShieldCheck, Globe } from 'lucide-react';
+import { PhoneCall, Mail, MapPin, ShieldCheck, Globe, Send, CheckCircle2 } from 'lucide-react';
 
 export default function Footer() {
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterMessage, setNewsletterMessage] = useState('');
+  const [newsletterLoading, setNewsletterLoading] = useState(false);
+
+  const subscribe = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setNewsletterLoading(true);
+    setNewsletterMessage('');
+    try {
+      const response = await fetch('/api/newsletter', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: newsletterEmail }),
+      });
+      const data = await response.json();
+      setNewsletterMessage(data.message || (data.success ? 'Successfully subscribed.' : 'Unable to subscribe.'));
+      if (data.success) setNewsletterEmail('');
+    } catch {
+      setNewsletterMessage('Unable to connect. Please try again.');
+    } finally {
+      setNewsletterLoading(false);
+    }
+  };
+
   return (
     <footer className="theme-app-bg border-t border-slate-200 dark:border-slate-800 font-sans transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-10">
           
           {/* Column 1: Brand, Accreditation & Social Media Icons */}
           <div className="lg:col-span-2 space-y-5">
@@ -119,8 +141,8 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/book-guard" className="theme-app-body hover:text-[#F5C623] transition">
-                  Armed Protection Officers
+                <Link href="/support" className="theme-app-body hover:text-[#F5C623] transition">
+                  Help & Support Center
                 </Link>
               </li>
               <li>
@@ -129,45 +151,45 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="theme-app-body hover:text-[#F5C623] transition">
-                  Event Crowd Control
+                <Link href="/collaboration" className="theme-app-body hover:text-[#F5C623] transition">
+                  Enterprise Collaboration
                 </Link>
               </li>
               <li>
-                <Link href="/why-choose-us" className="theme-app-body hover:text-[#F5C623] transition">
-                  Live Patrol Telemetry
+                <Link href="/affiliate" className="theme-app-body hover:text-[#F5C623] transition">
+                  Affiliation & Referrals
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Quick Navigation */}
+          {/* Column 3: Explore */}
           <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5C623]">Quick Links</h4>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#F5C623]">Explore</h4>
             <ul className="space-y-2 text-xs font-semibold">
               <li>
-                <Link href="/about" className="theme-app-body hover:text-[#F5C623] transition">
-                  Who We Are (About Us)
+                <Link href="/gallery" className="theme-app-body hover:text-[#F5C623] transition">
+                  Operations Gallery
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="theme-app-body hover:text-[#F5C623] transition">
-                  Pricing & Calculator
+                <Link href="/blog" className="theme-app-body hover:text-[#F5C623] transition">
+                  Security Blog
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="theme-app-body hover:text-[#F5C623] transition">
-                  Guard Candidate Careers
+                <Link href="/affiliate" className="theme-app-body hover:text-[#F5C623] transition">
+                  Affiliation Program
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="theme-app-body hover:text-[#F5C623] transition">
-                  Contact Dispatch Desk
+                <Link href="/collaboration" className="theme-app-body hover:text-[#F5C623] transition">
+                  Collaboration
                 </Link>
               </li>
               <li>
-                <Link href="/admin/login" className="theme-app-body hover:text-[#F5C623] transition">
-                  Client & Admin Portal
+                <Link href="/profile" className="theme-app-body hover:text-[#F5C623] transition">
+                  My Client Profile
                 </Link>
               </li>
             </ul>
@@ -200,6 +222,18 @@ export default function Footer() {
             </ul>
           </div>
 
+        </div>
+
+        <div className="mt-12 rounded-3xl border border-[#F5C623]/30 bg-[#F5C623]/5 p-6 sm:p-8 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+          <div>
+            <h4 className="text-base font-bold theme-app-heading flex items-center gap-2"><Mail className="w-5 h-5 text-[#F5C623]" /> Security updates, straight to your inbox</h4>
+            <p className="text-xs theme-app-body mt-1">Get safety advisories, deployment updates, and SURAKSHA service news. You can unsubscribe anytime.</p>
+          </div>
+          <form onSubmit={subscribe} className="w-full lg:w-auto flex flex-col sm:flex-row gap-2">
+            <input type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="you@company.com" className="min-w-0 sm:w-72 rounded-xl px-4 py-3 text-xs theme-app-heading theme-app-bg border border-slate-300 dark:border-slate-700 focus:border-[#F5C623] outline-none" />
+            <button disabled={newsletterLoading} type="submit" className="trust-yellow-btn px-5 py-3 rounded-xl text-xs font-bold flex justify-center items-center gap-2">{newsletterLoading ? 'Subscribing...' : <><Send className="w-4 h-4" /> Subscribe</>}</button>
+          </form>
+          {newsletterMessage && <p className="text-xs text-emerald-500 flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> {newsletterMessage}</p>}
         </div>
 
         {/* Bottom Copyright Bar */}
