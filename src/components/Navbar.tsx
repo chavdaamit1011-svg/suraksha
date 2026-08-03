@@ -17,9 +17,11 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 25);
+      const nextScrolled = window.scrollY > 32;
+      setIsScrolled((current) => current === nextScrolled ? current : nextScrolled);
     };
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     // Read stored theme preference
     const savedTheme = (localStorage.getItem('suraksha_theme') as 'dark' | 'light') || 'dark';
@@ -81,10 +83,10 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 font-sans transition-all duration-300">
+    <header className="fixed top-0 left-0 right-0 z-40 font-sans">
       {/* 1. Official Government Top Utility Bar */}
-      <div className={`border-b text-xs font-semibold px-4 sm:px-8 py-1.5 flex items-center justify-between transition-all duration-300 ${
-        isScrolled ? 'hidden' : 'flex'
+      <div className={`border-b text-xs font-semibold px-4 sm:px-8 flex items-center justify-between overflow-hidden transition-[max-height,opacity,transform,padding,border-color] duration-300 ease-out ${
+        isScrolled ? 'max-h-0 py-0 opacity-0 -translate-y-full border-transparent pointer-events-none' : 'max-h-10 py-1.5 opacity-100 translate-y-0'
       } ${
         theme === 'light'
           ? 'bg-slate-200 border-slate-300 text-slate-800'
@@ -109,13 +111,13 @@ export default function Navbar() {
       </div>
 
       {/* 2. Main Navbar Bar */}
-      <div className={`transition-all duration-300 ${isScrolled ? 'pt-3 px-4 sm:px-8' : 'pt-0 px-0'}`}>
+      <div className={`transition-[padding] duration-300 ease-out ${isScrolled ? 'pt-3 px-4 sm:px-8' : 'pt-0 px-0'}`}>
         <div
-          className={`transition-all duration-300 ${
+          className={`transition-[background-color,border-color,border-radius,box-shadow,padding,max-width] duration-300 ease-out ${
             isScrolled
               ? theme === 'light'
-                ? 'max-w-7xl mx-auto rounded-2xl bg-white/98 border border-slate-200 px-4 sm:px-6 py-2 shadow-xl backdrop-blur-xl animate-fadeIn'
-                : 'max-w-7xl mx-auto rounded-2xl bg-[#0B0D0F]/98 border border-amber-500/35 px-4 sm:px-6 py-2 shadow-2xl backdrop-blur-xl animate-fadeIn'
+                ? 'max-w-7xl mx-auto rounded-2xl bg-white/98 border border-slate-200 px-4 sm:px-6 py-2 shadow-xl backdrop-blur-xl'
+                : 'max-w-7xl mx-auto rounded-2xl bg-[#0B0D0F]/98 border border-amber-500/35 px-4 sm:px-6 py-2 shadow-2xl backdrop-blur-xl'
               : theme === 'light'
               ? 'bg-white/95 border-b border-slate-200 px-4 sm:px-8 py-2.5 backdrop-blur-md'
               : 'bg-[#0B0D0F]/90 border-b border-[#1E1F22] px-4 sm:px-8 py-2.5 backdrop-blur-md'
