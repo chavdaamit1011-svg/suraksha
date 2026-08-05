@@ -37,15 +37,25 @@
     animation: pulseRadar 2.5s infinite;
   }
 
-  @keyframes fadeIn {
-    from {
+  @keyframes radarScanSweep {
+    0% {
+      top: 0%;
       opacity: 0;
-      transform: translateY(6px);
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    10% {
+      opacity: 0.85;
     }
+    90% {
+      opacity: 0.85;
+    }
+    100% {
+      top: 100%;
+      opacity: 0;
+    }
+  }
+
+  .animate-radarScanSweep {
+    animation: radarScanSweep 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
   }
 
   .animate-fadeIn {
@@ -53,29 +63,31 @@
   }
 }
 
+
+
 /* GLOBAL THEME ENGINE - TRINETRA AGENCY OS DARK THEME */
 :root {
   --app-bg: #0B0D0F;
   --app-card: #16181C;
-  --app-card-elevated: #1E2024;
   --app-card-border: rgba(255, 255, 255, 0.08);
   --app-text-heading: #FFFFFF;
   --app-text-body: rgba(255, 255, 255, 0.65);
-  --app-text-muted: rgba(255, 255, 255, 0.4);
   --app-accent: #F5C623;
+  --app-accent-text: #F5C623;
   --app-grid-line: rgba(255, 255, 255, 0.03);
+  --app-glow-radial: radial-gradient(circle at 50% 0%, rgba(245, 198, 35, 0.12) 0%, transparent 60%);
 }
 
 html.light {
-  --app-bg: #F6F7F9;
+  --app-bg: #F7F7F8;
   --app-card: #FFFFFF;
-  --app-card-elevated: #F0F2F5;
-  --app-card-border: rgba(0, 0, 0, 0.08);
-  --app-text-heading: #111827;
-  --app-text-body: #4B5563;
-  --app-text-muted: #9CA3AF;
-  --app-accent: #B8860B;
-  --app-grid-line: rgba(0, 0, 0, 0.04);
+  --app-card-border: rgba(0, 0, 0, 0.06);
+  --app-text-heading: #18181B;
+  --app-text-body: #52525B;
+  --app-accent: #F5C623;
+  --app-accent-text: #B8860B;
+  --app-grid-line: rgba(0, 0, 0, 0.035);
+  --app-glow-radial: radial-gradient(circle at 50% 0%, rgba(245, 198, 35, 0.22) 0%, rgba(253, 248, 226, 0.6) 40%, transparent 75%);
 }
 
 .suraksha-grid-bg {
@@ -83,15 +95,69 @@ html.light {
   background-image: 
     linear-gradient(to right, var(--app-grid-line) 1px, transparent 1px),
     linear-gradient(to bottom, var(--app-grid-line) 1px, transparent 1px);
-  background-size: 40px 40px;
+  background-size: 36px 36px;
+}
+
+.suraksha-radial-glow {
+  background: var(--app-glow-radial);
+}
+
+.suraksha-card {
+  background-color: var(--app-card);
+  border: 1px solid var(--app-card-border);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+.suraksha-card-hover {
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.suraksha-card-hover:hover {
+  border-color: rgba(245, 198, 35, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(245, 198, 35, 0.08);
+}
+
+/* Universal Light Mode Overrides for ALL Pages */
+html.light body {
+  background-color: #F7F7F8 !important;
+  color: #18181B !important;
+}
+
+html.light .bg-slate-950,
+html.light .bg-slate-900 {
+  background-color: #F7F7F8 !important;
+}
+
+html.light .bg-slate-850,
+html.light .bg-slate-800 {
+  background-color: #FFFFFF !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+html.light .text-white,
+html.light .text-slate-100,
+html.light .text-slate-200 {
+  color: #18181B !important;
+}
+
+html.light .text-slate-300,
+html.light .text-slate-400 {
+  color: #52525B !important;
+}
+
+html.light .border-slate-800,
+html.light .border-slate-850,
+html.light .border-slate-900 {
+  border-color: rgba(0, 0, 0, 0.06) !important;
 }
 
 /* FIX LIGHT MODE HOVER DARKENING IN DROPDOWNS & BUTTONS */
 html.light .hover\:bg-slate-900:hover,
 html.light .hover\:bg-slate-850:hover,
 html.light .hover\:bg-slate-800:hover {
-  background-color: #F1F5F9 !important;
-  color: #D97706 !important;
+  background-color: #F4F4F5 !important;
+  color: #B8860B !important;
 }
 
 /* Custom Theme Classes */
@@ -118,12 +184,14 @@ html.light .hover\:bg-slate-800:hover {
   background-color: #F5C623 !important;
   color: #0B0D0F !important;
   font-weight: 700 !important;
+  box-shadow: 0 4px 16px rgba(245, 198, 35, 0.3);
   transition: all 0.2s ease;
 }
 
 .trust-yellow-btn:hover {
   background-color: #E5B612 !important;
   transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(245, 198, 35, 0.4);
 }
 
 body {

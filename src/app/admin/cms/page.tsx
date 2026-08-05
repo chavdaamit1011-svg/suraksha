@@ -9,7 +9,7 @@ export default function CMSManagerPage() {
   const [heroText, setHeroText] = useState('Shielding Your Assets with Elite Guards & Command Tech');
   const [privacyPolicy, setPrivacyPolicy] = useState('SURAKSHA collects personal information required for security guard deployment...');
   const [termsText, setTermsText] = useState('By booking guards or entering into a multi-year B2B tender contract with SURAKSHA...');
-  const [bannerLogoUrl, setBannerLogoUrl] = useState('/logo.png');
+  const [bannerLogoUrl, setBannerLogoUrl] = useState('/suraksha-logo-full.png');
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();

@@ -27,26 +27,25 @@ export default function Logo({ className = '', size = 'md' }: LogoProps) {
   }, []);
 
   const logoHeights = {
-    sm: 'h-8 max-h-8',
-    md: 'h-10 max-h-10 sm:h-11 sm:max-h-11',
-    lg: 'h-14 max-h-14 sm:h-16 sm:max-h-16',
+    sm: 'h-7 max-h-7',
+    md: 'h-8 max-h-8 sm:h-9 sm:max-h-9',
+    lg: 'h-11 max-h-11 sm:h-13 sm:max-h-13',
   };
 
   return (
-    <div className={`flex items-center select-none cursor-pointer ${className}`}>
-      {/* 
-        Logo Image Rendering:
-        - In Dark Mode: mix-blend-screen (drops out dark background seamlessly)
-        - In Light Mode: mix-blend-multiply (drops out white background seamlessly, keeping logo shield crisp & bold)
-      */}
+    <div className={`flex items-center gap-2 select-none cursor-pointer ${className}`}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="/logo.png"
-        alt="SURAKSHA Logo"
-        className={`${logoHeights[size]} w-auto object-contain transition-all duration-200 hover:opacity-90 ${
-          theme === 'light' ? 'mix-blend-multiply filter contrast-125' : 'mix-blend-screen'
-        }`}
+        src="/suraksha-mark.png"
+        alt="SURAKSHA Mark"
+        className={`${logoHeights[size]} w-auto object-contain transition-all duration-200 hover:scale-105`}
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = '/logo.png';
+        }}
       />
+      <span className="font-black tracking-[0.16em] text-sm sm:text-base theme-app-heading font-sans uppercase">
+        SURAKSHA
+      </span>
     </div>
   );
 }
