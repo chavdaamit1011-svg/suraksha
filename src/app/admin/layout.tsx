@@ -24,26 +24,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const userStr = localStorage.getItem('suraksha_user');
 
     if (!token || !userStr) {
-      // For demo / development convenience, fallback to auto-auth if local token not set
-      const demoUser = {
-        name: 'Amit Chavda',
-        role: 'superadmin',
-        email: 'chavdaamit1011@gmail.com',
-      };
-      localStorage.setItem('suraksha_token', 'demo_trinetra_token_2026');
-      localStorage.setItem('suraksha_user', JSON.stringify(demoUser));
-      setAuthorized(true);
+      setAuthorized(false);
       setChecking(false);
+      window.location.href = '/admin/login';
       return;
     }
 
     try {
       const user = JSON.parse(userStr);
-      if (['superadmin', 'admin'].includes(user.role)) {
+      if (['superadmin', 'admin'].includes(user?.role)) {
         setAuthorized(true);
       } else {
         setAuthorized(false);
-        window.location.href = '/profile';
+        window.location.href = '/admin/login';
       }
     } catch (e) {
       setAuthorized(false);

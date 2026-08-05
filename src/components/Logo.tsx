@@ -5,9 +5,10 @@ import React, { useState, useEffect } from 'react';
 interface LogoProps {
   className?: string;
   size?: 'sm' | 'md' | 'lg';
+  showText?: boolean;
 }
 
-export default function Logo({ className = '', size = 'md' }: LogoProps) {
+export default function Logo({ className = '', size = 'md', showText = true }: LogoProps) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {
@@ -43,9 +44,11 @@ export default function Logo({ className = '', size = 'md' }: LogoProps) {
           (e.target as HTMLImageElement).src = '/logo.png';
         }}
       />
-      <span className="font-black tracking-[0.16em] text-sm sm:text-base theme-app-heading font-sans uppercase">
-        SURAKSHA
-      </span>
+      {showText && (
+        <span className="font-black tracking-[0.16em] text-sm sm:text-base theme-app-heading font-sans uppercase">
+          SURAKSHA
+        </span>
+      )}
     </div>
   );
 }

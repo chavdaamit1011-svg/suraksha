@@ -161,7 +161,7 @@ export default function AdminSidebar({
       {/* Brand Header */}
       <div className="h-16 px-5 flex items-center justify-between border-b border-white/[0.08]">
         <Link href="/admin" className="flex items-center gap-2.5">
-          <Logo size="sm" />
+          <Logo size="sm" showText={false} />
           <div>
             <span className="text-sm font-black tracking-wider text-white block leading-none">
               SURAKSHA

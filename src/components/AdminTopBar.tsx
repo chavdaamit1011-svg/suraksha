@@ -44,7 +44,7 @@ export default function AdminTopBar({
         )}
 
         <div className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-[#1E1F22] border border-white/[0.08]">
-          <Logo size="sm" />
+          <Logo size="sm" showText={false} />
           <span className="font-bold text-white text-xs">Suraksha Security Agency</span>
           <span className="text-[10px] font-bold text-[#F5C623] border border-[#F5C623]/40 px-1.5 py-0.5 rounded uppercase tracking-wider">
             Professional
