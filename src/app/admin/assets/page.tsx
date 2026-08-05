@@ -13,55 +13,51 @@ export default function AssetManagerPage() {
   ]);
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
-      <AdminSidebar />
+    <div className="space-y-6 font-sans">
+      <div className="pb-4 border-b border-white/[0.08]">
+        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <Box className="w-6 h-6 text-[#F5C623]" /> Security Assets & Inventory Control
+        </h1>
+        <p className="text-xs text-white/55 mt-1">Track equipment allocations, body cameras, radios, and gear inventory.</p>
+      </div>
 
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
-        <div className="pb-4 border-b border-slate-900">
-          <h1 className="text-2xl font-black text-white flex items-center gap-2">
-            <Box className="w-6 h-6 text-amber-400" /> Security Assets & Inventory Control
-          </h1>
-          <p className="text-xs text-slate-400">Track equipment allocations, body cameras, radios, and future gear demands.</p>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+        <div className="trinetra-card p-5 rounded-xl">
+          <span className="text-white/55 font-bold">Total Inventory</span>
+          <div className="text-2xl font-black text-white mt-1">45 Units</div>
         </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-          <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-            <span className="text-slate-400 font-bold">Total Inventory</span>
-            <div className="text-2xl font-black text-white mt-1">45 Units</div>
-          </div>
-          <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-            <span className="text-amber-400 font-bold">Allocated In-Use</span>
-            <div className="text-2xl font-black text-amber-400 mt-1">32 Units</div>
-          </div>
-          <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-            <span className="text-emerald-400 font-bold">Available in Depot</span>
-            <div className="text-2xl font-black text-emerald-400 mt-1">13 Units</div>
-          </div>
-          <div className="bg-slate-900 border border-slate-800 p-5 rounded-2xl">
-            <span className="text-purple-400 font-bold">Upcoming Demand</span>
-            <div className="text-2xl font-black text-purple-400 mt-1">+15 Body Cams</div>
-          </div>
+        <div className="trinetra-card p-5 rounded-xl">
+          <span className="text-[#F5C623] font-bold">Allocated In-Use</span>
+          <div className="text-2xl font-black text-[#F5C623] mt-1">32 Units</div>
         </div>
+        <div className="trinetra-card p-5 rounded-xl">
+          <span className="text-emerald-400 font-bold">Available in Depot</span>
+          <div className="text-2xl font-black text-emerald-400 mt-1">13 Units</div>
+        </div>
+        <div className="trinetra-card p-5 rounded-xl">
+          <span className="text-white/55 font-bold">Upcoming Demand</span>
+          <div className="text-2xl font-black text-white mt-1">+15 Body Cams</div>
+        </div>
+      </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <h3 className="text-sm font-bold text-amber-400">Asset Allocation List</h3>
-          <div className="space-y-3 text-xs">
-            {assets.map((ast) => (
-              <div key={ast.id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                <div>
-                  <span className="font-mono text-amber-400 font-bold">{ast.id}</span>
-                  <h5 className="font-bold text-white text-sm">{ast.name}</h5>
-                  <p className="text-slate-400">Category: {ast.category}</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-emerald-400 font-bold">{ast.status}</span>
-                  <p className="text-slate-400 text-[10px]">Assigned: {ast.assignedTo}</p>
-                </div>
+      <div className="trinetra-card border border-white/[0.08] rounded-xl p-6 space-y-4">
+        <h3 className="text-sm font-bold text-[#F5C623]">Asset Allocation List</h3>
+        <div className="space-y-3 text-xs">
+          {assets.map((ast) => (
+            <div key={ast.id} className="p-4 rounded-lg bg-[#111316] border border-white/[0.08] flex items-center justify-between">
+              <div>
+                <span className="font-mono text-[#F5C623] font-bold">{ast.id}</span>
+                <h5 className="font-bold text-white text-sm">{ast.name}</h5>
+                <p className="text-white/55">Category: {ast.category}</p>
               </div>
-            ))}
-          </div>
+              <div className="text-right">
+                <span className="text-emerald-400 font-bold">{ast.status}</span>
+                <p className="text-white/40 text-[10px]">Assigned: {ast.assignedTo}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
+      </div>
     </div>
   );
 }

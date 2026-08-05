@@ -45,16 +45,83 @@ export default function NewsletterAdminPage() {
   };
 
   const activeCount = subscribers.filter((s) => s.status === 'subscribed').length;
-  return <div className="flex min-h-screen theme-app-bg font-sans"><AdminSidebar />
-    <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
-      <div className="flex flex-col sm:flex-row justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
-        <div><h1 className="text-2xl font-bold theme-app-heading flex items-center gap-2"><Mail className="w-6 h-6 text-[#F5C623]" /> Newsletter Subscribers</h1><p className="text-xs theme-app-body mt-1">Emails submitted through the website footer are stored here.</p></div>
-        <button onClick={loadSubscribers} className="trust-yellow-btn px-4 py-2 rounded-xl text-xs flex items-center gap-2"><RefreshCw className="w-4 h-4" /> Refresh</button>
+  return (
+    <div className="space-y-6 font-sans">
+      <div className="flex flex-col sm:flex-row justify-between gap-4 pb-4 border-b border-white/[0.08]">
+        <div>
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+            <Mail className="w-6 h-6 text-[#F5C623]" /> Newsletter Subscribers
+          </h1>
+          <p className="text-xs text-white/55 mt-1">
+            Emails submitted through the website footer are stored here.
+          </p>
+        </div>
+        <button
+          onClick={loadSubscribers}
+          className="trinetra-btn-primary px-4 py-2 rounded-lg bg-[#F5C623] hover:bg-[#E5B612] text-[#0B0D0F] font-bold text-xs flex items-center gap-2"
+        >
+          <RefreshCw className="w-4 h-4" /> Refresh
+        </button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"><div className="theme-app-card border border-slate-200 dark:border-slate-800 rounded-2xl p-5"><p className="text-xs theme-app-body">Total subscribers</p><p className="text-3xl font-bold text-[#F5C623]">{subscribers.length}</p></div><div className="theme-app-card border border-slate-200 dark:border-slate-800 rounded-2xl p-5"><p className="text-xs theme-app-body">Active subscribers</p><p className="text-3xl font-bold text-emerald-500">{activeCount}</p></div></div>
-      <div className="theme-app-card border border-slate-200 dark:border-slate-800 rounded-3xl p-6">
-        {loading ? <div className="flex justify-center p-12 text-xs theme-app-body gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Loading subscribers...</div> : subscribers.length === 0 ? <p className="text-center py-10 text-xs theme-app-body">No newsletter subscriptions yet.</p> : <div className="space-y-3">{subscribers.map((subscriber) => <div key={subscriber._id} className="p-4 rounded-2xl theme-app-bg border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3"><div><p className="font-bold theme-app-heading text-sm">{subscriber.email}</p><p className="text-xs theme-app-body">{subscriber.name || 'Newsletter subscriber'} · Joined {new Date(subscriber.createdAt).toLocaleDateString()}</p></div><button disabled={updating === subscriber._id} onClick={() => updateStatus(subscriber._id, subscriber.status === 'subscribed' ? 'unsubscribed' : 'subscribed')} className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-2 ${subscriber.status === 'subscribed' ? 'bg-emerald-500/15 text-emerald-500' : 'bg-slate-500/15 text-slate-400'}`}>{subscriber.status === 'subscribed' ? <UserRoundCheck className="w-4 h-4" /> : <UserRoundX className="w-4 h-4" />}{subscriber.status === 'subscribed' ? 'Subscribed' : 'Unsubscribed'}</button></div>)}</div>}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="trinetra-card rounded-xl p-5">
+          <p className="text-xs text-white/55">Total subscribers</p>
+          <p className="text-3xl font-bold text-[#F5C623]">{subscribers.length}</p>
+        </div>
+        <div className="trinetra-card rounded-xl p-5">
+          <p className="text-xs text-white/55">Active subscribers</p>
+          <p className="text-3xl font-bold text-emerald-400">{activeCount}</p>
+        </div>
       </div>
-    </main>
-  </div>;
+
+      <div className="trinetra-card rounded-xl p-6">
+        {loading ? (
+          <div className="flex justify-center p-12 text-xs text-white/55 gap-2">
+            <Loader2 className="w-4 h-4 animate-spin text-[#F5C623]" /> Loading subscribers...
+          </div>
+        ) : subscribers.length === 0 ? (
+          <p className="text-center py-10 text-xs text-white/40">No newsletter subscriptions yet.</p>
+        ) : (
+          <div className="space-y-3">
+            {subscribers.map((subscriber) => (
+              <div
+                key={subscriber._id}
+                className="p-4 rounded-lg bg-[#111316] border border-white/[0.08] flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+              >
+                <div>
+                  <p className="font-bold text-white text-sm">{subscriber.email}</p>
+                  <p className="text-xs text-white/40">
+                    {subscriber.name || 'Newsletter subscriber'} · Joined{' '}
+                    {new Date(subscriber.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <button
+                  disabled={updating === subscriber._id}
+                  onClick={() =>
+                    updateStatus(
+                      subscriber._id,
+                      subscriber.status === 'subscribed' ? 'unsubscribed' : 'subscribed'
+                    )
+                  }
+                  className={`px-3 py-1.5 rounded-md text-xs font-bold flex items-center gap-2 ${
+                    subscriber.status === 'subscribed'
+                      ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
+                      : 'bg-white/[0.04] text-white/40'
+                  }`}
+                >
+                  {subscriber.status === 'subscribed' ? (
+                    <UserRoundCheck className="w-4 h-4" />
+                  ) : (
+                    <UserRoundX className="w-4 h-4" />
+                  )}
+                  {subscriber.status === 'subscribed' ? 'Subscribed' : 'Unsubscribed'}
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

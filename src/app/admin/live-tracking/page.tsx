@@ -64,10 +64,7 @@ export default function LiveTrackingPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
-      <AdminSidebar />
-
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
+    <div className="space-y-6 font-sans">
         <div className="pb-4 border-b border-slate-900">
           <h1 className="text-2xl font-black text-white flex items-center gap-2">
             <MapPin className="w-6 h-6 text-amber-400" /> Live Guard GPS Tracking & Inspection Desk
@@ -169,7 +166,6 @@ export default function LiveTrackingPage() {
             </div>
           </div>
         )}
-      </main>
     </div>
   );
 }

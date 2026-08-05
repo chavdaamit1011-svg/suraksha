@@ -12,46 +12,42 @@ export default function ConsolePage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
-      <AdminSidebar />
+    <div className="space-y-6 font-sans">
+      <div className="pb-4 border-b border-white/[0.08]">
+        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <Building className="w-6 h-6 text-[#F5C623]" /> Agency Console Overview
+        </h1>
+        <p className="text-xs text-white/55 mt-1">Aggregated guard counts and deployment metrics across partner agencies.</p>
+      </div>
 
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
-        <div className="pb-4 border-b border-slate-900">
-          <h1 className="text-2xl font-black text-white flex items-center gap-2">
-            <Building className="w-6 h-6 text-amber-400" /> Agency-Wide Console Overview
-          </h1>
-          <p className="text-xs text-slate-400">Aggregated guard counts and deployment metrics across partner agencies.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {agencies.map((agency, idx) => (
-            <div key={idx} className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4">
-              <div className="flex items-center gap-3">
-                <Shield className="w-8 h-8 text-amber-400" />
-                <div>
-                  <h3 className="font-bold text-white text-sm">{agency.name}</h3>
-                  <p className="text-xs text-slate-400">{agency.sites} Active Deployments</p>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-2 bg-slate-950 p-4 rounded-2xl border border-slate-850 text-center text-xs">
-                <div>
-                  <span className="text-slate-400 text-[10px]">Total</span>
-                  <div className="font-bold text-white mt-0.5">{agency.totalGuards}</div>
-                </div>
-                <div>
-                  <span className="text-emerald-400 text-[10px]">Active</span>
-                  <div className="font-bold text-emerald-400 mt-0.5">{agency.active}</div>
-                </div>
-                <div>
-                  <span className="text-rose-400 text-[10px]">Inactive</span>
-                  <div className="font-bold text-rose-400 mt-0.5">{agency.inactive}</div>
-                </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {agencies.map((agency, idx) => (
+          <div key={idx} className="trinetra-card border border-white/[0.08] p-5 rounded-xl space-y-4">
+            <div className="flex items-center gap-3">
+              <Shield className="w-8 h-8 text-[#F5C623]" />
+              <div>
+                <h3 className="font-bold text-white text-sm">{agency.name}</h3>
+                <p className="text-xs text-white/55">{agency.sites} Active Deployments</p>
               </div>
             </div>
-          ))}
-        </div>
-      </main>
+
+            <div className="grid grid-cols-3 gap-2 bg-[#111316] p-3 rounded-lg border border-white/[0.08] text-center text-xs">
+              <div>
+                <span className="text-white/40 text-[10px]">Total</span>
+                <div className="font-bold text-white mt-0.5">{agency.totalGuards}</div>
+              </div>
+              <div>
+                <span className="text-emerald-400 text-[10px]">Active</span>
+                <div className="font-bold text-emerald-400 mt-0.5">{agency.active}</div>
+              </div>
+              <div>
+                <span className="text-[#EF4444] text-[10px]">Inactive</span>
+                <div className="font-bold text-[#EF4444] mt-0.5">{agency.inactive}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

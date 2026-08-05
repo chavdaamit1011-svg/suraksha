@@ -12,35 +12,31 @@ export default function CompliancePage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
-      <AdminSidebar />
+    <div className="space-y-6 font-sans">
+      <div className="pb-4 border-b border-white/[0.08]">
+        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <FileText className="w-6 h-6 text-[#F5C623]" /> Compliance & Statutory Certifications
+        </h1>
+        <p className="text-xs text-white/55 mt-1">Statutory certifications, security licenses, and police verification records.</p>
+      </div>
 
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
-        <div className="pb-4 border-b border-slate-900">
-          <h1 className="text-2xl font-black text-white flex items-center gap-2">
-            <FileText className="w-6 h-6 text-amber-400" /> Compliance, Legal & Document Vault
-          </h1>
-          <p className="text-xs text-slate-400">Statutory certifications, security licenses, and police verification documents.</p>
-        </div>
-
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <h3 className="text-sm font-bold text-amber-400">Verified Legal Certificates</h3>
-          <div className="space-y-3 text-xs">
-            {docs.map((d, idx) => (
-              <div key={idx} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                <div>
-                  <h5 className="font-bold text-white text-sm">{d.name}</h5>
-                  <p className="text-slate-400 font-mono">ID: {d.certId}</p>
-                </div>
-                <div className="text-right">
-                  <span className="text-emerald-400 font-bold">{d.status}</span>
-                  <p className="text-slate-400 text-[10px]">Expiry: {d.expiry}</p>
-                </div>
+      <div className="trinetra-card border border-white/[0.08] rounded-xl p-6 space-y-4">
+        <h3 className="text-sm font-bold text-[#F5C623]">Verified Legal Certificates</h3>
+        <div className="space-y-3 text-xs">
+          {docs.map((d, idx) => (
+            <div key={idx} className="p-4 rounded-lg bg-[#111316] border border-white/[0.08] flex items-center justify-between">
+              <div>
+                <h5 className="font-bold text-white text-sm">{d.name}</h5>
+                <p className="text-white/55 font-mono mt-0.5">ID: {d.certId}</p>
               </div>
-            ))}
-          </div>
+              <div className="text-right">
+                <span className="text-emerald-400 font-bold">{d.status}</span>
+                <p className="text-white/40 text-[10px]">Expiry: {d.expiry}</p>
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
+      </div>
     </div>
   );
 }

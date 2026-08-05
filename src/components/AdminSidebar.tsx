@@ -3,159 +3,221 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import Logo from './Logo';
 import {
   LayoutDashboard,
-  Shield,
-  FileCheck,
-  Radio,
-  MapPin,
-  AlertTriangle,
-  Boxes,
-  Briefcase,
-  BookOpen,
-  GraduationCap,
+  Building,
   Building2,
-  HelpCircle,
-  DollarSign,
-  FileText,
-  Globe,
-  Settings,
   Users,
+  Shield,
+  UserPlus,
+  GraduationCap,
+  Package,
+  Briefcase,
+  MapPin,
+  FileCheck,
+  TrendingUp,
+  Calendar,
+  Clock,
+  Radio,
+  Activity,
   Compass,
-  Download,
-  ChevronDown,
-  ChevronRight,
+  Moon,
+  AlertTriangle,
   UserCheck,
-  Crown,
-  Mail,
+  FileText,
+  DollarSign,
+  Receipt,
+  CreditCard,
+  PieChart,
+  ShieldCheck,
+  Scale,
+  Folder,
+  BarChart3,
+  Settings,
+  HelpCircle,
+  ChevronRight,
+  ChevronDown,
+  Globe,
   Star,
+  Mail,
+  BookOpen,
+  Crown,
+  Share2,
 } from 'lucide-react';
 
-export default function AdminSidebar() {
+import Logo from './Logo';
+
+interface SidebarItem {
+  name: string;
+  href: string;
+  icon: any;
+}
+
+interface SidebarGroup {
+  title: string;
+  items: SidebarItem[];
+}
+
+export default function AdminSidebar({
+  mobileOpen,
+  onCloseMobile,
+}: {
+  mobileOpen?: boolean;
+  onCloseMobile?: () => void;
+}) {
   const pathname = usePathname();
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
 
-  const toggleSection = (sectionTitle: string) => {
+  const toggleSection = (title: string) => {
     setCollapsedSections((prev) => ({
       ...prev,
-      [sectionTitle]: !prev[sectionTitle],
+      [title]: !prev[title],
     }));
   };
 
-  const menuSections = [
+  const groups: SidebarGroup[] = [
     {
-      title: 'COMMAND CENTER',
+      title: 'OVERVIEW',
+      items: [{ name: 'Dashboard', href: '/admin', icon: LayoutDashboard }],
+    },
+    {
+      title: 'ORGANIZATION',
       items: [
-        { name: 'Command Dashboard', href: '/admin', icon: LayoutDashboard },
-        { name: 'Admin Management', href: '/admin/users', icon: UserCheck },
-        { name: 'Client & User Accounts', href: '/admin/client-users', icon: Users },
+        { name: 'Organization', href: '/admin/organization', icon: Building },
+        { name: 'Branches', href: '/admin/branches', icon: Building2 },
+        { name: 'Team & Roles', href: '/admin/team', icon: Users },
       ],
     },
     {
-      title: '👑 SUPER ADMIN ACCESS CONTROL',
+      title: 'WORKFORCE',
       items: [
-        { name: 'Admin Management', href: '/admin/users', icon: UserCheck },
-        { name: 'Client & User Accounts', href: '/admin/client-users', icon: Users },
+        { name: 'Guards', href: '/admin/guards', icon: Shield },
+        { name: 'Recruitment', href: '/admin/recruitment', icon: UserPlus },
+        { name: 'Training', href: '/admin/training', icon: GraduationCap },
+        { name: 'Assets', href: '/admin/assets', icon: Package },
       ],
     },
     {
-      title: 'COMMAND & TELEMETRY',
+      title: 'CLIENTS & SALES',
       items: [
-        { name: 'Live GPS Guard Tracking', href: '/admin/live-tracking', icon: Radio },
-        { name: 'Patrol Checkpoints', href: '/admin/patrol', icon: MapPin },
-        { name: 'Incidents Desk', href: '/admin/incidents', icon: AlertTriangle },
+        { name: 'Clients', href: '/admin/clients', icon: Briefcase },
+        { name: 'Sites', href: '/admin/sites', icon: MapPin },
+        { name: 'Contracts', href: '/admin/contracts', icon: FileCheck },
+        { name: 'Sales & Leads', href: '/admin/sales-leads', icon: TrendingUp },
+        { name: 'B2B Tenders', href: '/admin/tenders', icon: FileText },
       ],
     },
     {
-      title: 'FORCE & ROSTER',
+      title: 'OPERATIONS',
       items: [
-        { name: 'Guards Roster & Hiring', href: '/admin/guards', icon: Shield },
-        { name: 'Skill Training & Tests', href: '/admin/training', icon: GraduationCap },
-        { name: 'Workspace Breakdown', href: '/admin/workspace', icon: Compass },
-        { name: 'Agency Console', href: '/admin/console', icon: Boxes },
-        { name: 'Asset Inventory', href: '/admin/assets', icon: Boxes },
+        { name: 'Scheduler', href: '/admin/scheduler', icon: Calendar },
+        { name: 'Attendance', href: '/admin/attendance', icon: Clock },
+        { name: 'Live Tracking', href: '/admin/live-tracking', icon: Radio },
+        { name: 'Command Center', href: '/admin/command-center', icon: Activity },
+        { name: 'Patrol', href: '/admin/patrol', icon: Compass },
+        { name: 'Night Alertness', href: '/admin/night-alertness', icon: Moon },
+        { name: 'Incidents', href: '/admin/incidents', icon: AlertTriangle },
+        { name: 'Visitors', href: '/admin/visitors', icon: UserCheck },
+        { name: 'Reports', href: '/admin/reports', icon: FileText },
       ],
     },
     {
-      title: 'B2B CONTRACTS & SALES',
+      title: 'FINANCE',
       items: [
-        { name: 'B2B Bulk Tenders', href: '/admin/tenders', icon: FileCheck },
-        { name: 'Leads Management', href: '/admin/sales-leads', icon: Briefcase },
-        { name: 'PDF Proposal Generator', href: '/admin/knowledge', icon: BookOpen },
+        { name: 'Payroll', href: '/admin/payroll', icon: DollarSign },
+        { name: 'Invoicing', href: '/admin/invoicing', icon: Receipt },
+        { name: 'Payments', href: '/admin/payments', icon: CreditCard },
+        { name: 'Expenses', href: '/admin/expenses', icon: PieChart },
       ],
     },
     {
-      title: 'FINANCE & PAYROLL',
+      title: 'GOVERNANCE',
       items: [
-        { name: 'Guard Payroll & Invoicing', href: '/admin/payroll', icon: DollarSign },
-        { name: 'Subscription Plans', href: '/admin/subscriptions', icon: FileCheck },
-        { name: 'Statutory Compliance', href: '/admin/compliance', icon: FileText },
+        { name: 'Compliance', href: '/admin/compliance', icon: ShieldCheck },
+        { name: 'Legal', href: '/admin/legal', icon: Scale },
+        { name: 'Documents', href: '/admin/documents', icon: Folder },
+        { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
       ],
     },
     {
-      title: 'ADMINISTRATION & CMS',
+      title: 'SYSTEM & EXTENSIONS',
       items: [
-        { name: 'Website CMS Manager', href: '/admin/cms', icon: Globe },
-        { name: 'Branch Offices', href: '/admin/branches', icon: Building2 },
-        { name: 'Website Contact Leads', href: '/admin/support-desk', icon: HelpCircle },
-        { name: 'Newsletter Subscribers', href: '/admin/newsletter', icon: Mail },
-        { name: 'Review Moderation', href: '/admin/reviews', icon: Star },
-        { name: 'GTM & Campaign Ads', href: '/admin/gtm', icon: Globe },
-        { name: 'Operations Analytics', href: '/admin/analytics', icon: Globe },
-        { name: 'Exportable Reports', href: '/admin/reports', icon: Download },
-        { name: 'System Settings', href: '/admin/settings', icon: Settings },
+        { name: 'Admin Users', href: '/admin/users', icon: Crown },
+        { name: 'Client Accounts', href: '/admin/client-users', icon: Share2 },
+        { name: 'Subscriptions', href: '/admin/subscriptions', icon: CreditCard },
+        { name: 'Website CMS', href: '/admin/cms', icon: Globe },
+        { name: 'GTM & Ads', href: '/admin/gtm', icon: Globe },
+        { name: 'Proposal Vault', href: '/admin/knowledge', icon: BookOpen },
+        { name: 'Reviews', href: '/admin/reviews', icon: Star },
+        { name: 'Newsletter', href: '/admin/newsletter', icon: Mail },
+        { name: 'Settings', href: '/admin/settings', icon: Settings },
+        { name: 'Support', href: '/admin/support-desk', icon: HelpCircle },
       ],
     },
   ];
 
   return (
-    <aside className="w-64 bg-slate-950 border-r border-slate-900 min-h-screen flex flex-col shrink-0 font-sans">
-      {/* Header Logo */}
-      <div className="p-5 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <Logo size="md" />
+    <aside className="w-[276px] bg-[#111316] border-r border-white/[0.08] flex flex-col h-full shrink-0 select-none font-sans text-xs">
+      {/* Brand Header */}
+      <div className="h-16 px-5 flex items-center justify-between border-b border-white/[0.08]">
+        <Link href="/admin" className="flex items-center gap-2.5">
+          <Logo size="sm" />
+          <div>
+            <span className="text-sm font-black tracking-wider text-white block leading-none">
+              SURAKSHA
+            </span>
+            <span className="text-[9px] font-bold uppercase tracking-widest text-[#F5C623] block mt-0.5">
+              AGENCY OS
+            </span>
+          </div>
         </Link>
-        <span className="text-[10px] font-mono font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/30">
-          v2.5
+        <span className="text-[10px] font-mono font-bold text-white/50 bg-white/[0.04] px-2 py-0.5 rounded border border-white/[0.08]">
+          v4.2
         </span>
       </div>
 
-      {/* Clean Menu Sections */}
-      <div className="flex-1 px-3 py-2 space-y-4 overflow-y-auto max-h-[calc(100vh-120px)]">
-        {menuSections.filter((sec, sectionIndex) => sectionIndex === 0 || !sec.items.some((item) => item.href === '/admin/users')).map((sec, idx) => {
-          const isCollapsed = collapsedSections[sec.title];
+      {/* Scrollable Groups Navigation */}
+      <div className="flex-1 px-3 py-3 space-y-4 overflow-y-auto custom-scrollbar">
+        {groups.map((group, groupIdx) => {
+          const isCollapsed = collapsedSections[group.title];
           return (
-            <div key={idx} className="space-y-1">
-              {/* Category Label */}
+            <div key={groupIdx} className="space-y-1">
+              {/* Group Heading */}
               <button
-                onClick={() => toggleSection(sec.title)}
-                className="w-full flex items-center justify-between px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-amber-400/90 hover:text-amber-300 transition"
+                onClick={() => toggleSection(group.title)}
+                className="w-full flex items-center justify-between px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest text-white/40 hover:text-white/70 transition"
               >
-                <span>{sec.title}</span>
-                {isCollapsed ? <ChevronRight className="w-3 h-3 text-slate-500" /> : <ChevronDown className="w-3 h-3 text-slate-500" />}
+                <span>{group.title}</span>
+                {isCollapsed ? (
+                  <ChevronRight className="w-3 h-3 text-white/30" />
+                ) : (
+                  <ChevronDown className="w-3 h-3 text-white/30" />
+                )}
               </button>
 
-              {/* Items List */}
+              {/* Items */}
               {!isCollapsed && (
                 <div className="space-y-0.5">
-                  {sec.items.map((item) => {
+                  {group.items.map((item) => {
                     const Icon = item.icon;
                     const isActive = pathname === item.href;
                     return (
                       <Link
-                        key={item.name}
+                        key={item.href}
                         href={item.href}
-                        className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition duration-150 ${
+                        onClick={onCloseMobile}
+                        className={`flex items-center gap-3 px-3 py-2 rounded-md font-medium transition duration-150 relative ${
                           isActive
-                            ? 'bg-amber-500/15 text-amber-400 font-bold border border-amber-500/30 shadow-sm'
-                            : 'text-slate-300 hover:text-amber-400 hover:bg-slate-900'
+                            ? 'bg-white/[0.07] text-white font-semibold border-l-2 border-[#F5C623]'
+                            : 'text-white/60 hover:text-white hover:bg-white/[0.04]'
                         }`}
                       >
-                        <div className="flex items-center gap-2.5">
-                          <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
-                          <span className="truncate">{item.name}</span>
-                        </div>
+                        <Icon
+                          className={`w-[18px] h-[18px] shrink-0 ${
+                            isActive ? 'text-[#F5C623]' : 'text-white/40'
+                          }`}
+                        />
+                        <span className="truncate">{item.name}</span>
                       </Link>
                     );
                   })}
@@ -166,15 +228,18 @@ export default function AdminSidebar() {
         })}
       </div>
 
-      {/* Footer Super Admin Profile */}
-      <div className="p-3 bg-slate-950 border-t border-slate-900">
-        <div className="flex items-center gap-2.5 p-2 rounded-xl bg-slate-900 border border-slate-850">
-          <div className="w-7 h-7 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-xs shrink-0">
-            <Crown className="w-4 h-4 text-slate-950" />
+      {/* Footer Tenant Info Card */}
+      <div className="p-3 border-t border-white/[0.08] bg-[#0B0D0F]">
+        <div className="p-3 rounded-lg bg-[#1E1F22] border border-white/[0.08] space-y-2">
+          <div className="flex items-center justify-between">
+            <h5 className="font-bold text-white truncate text-xs">Suraksha Security Agency</h5>
+            <span className="text-[10px] font-bold text-[#F5C623] bg-[#F5C623]/10 border border-[#F5C623]/30 px-1.5 py-0.5 rounded">
+              Professional
+            </span>
           </div>
-          <div className="truncate">
-            <h5 className="text-xs font-bold text-amber-400 truncate">Amit Chavda</h5>
-            <p className="text-[10px] text-slate-400 truncate">Super Admin Command</p>
+          <div className="flex items-center gap-2 text-[11px] text-white/50">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Tenant online · synced</span>
           </div>
         </div>
       </div>

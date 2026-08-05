@@ -19,10 +19,7 @@ export default function PayrollPage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
-      <AdminSidebar />
-
-      <main className="flex-1 p-6 sm:p-10 space-y-8 overflow-y-auto">
+    <div className="space-y-6 font-sans">
         {/* Top Header */}
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 pb-6 border-b border-slate-850">
           <div>
@@ -160,7 +157,6 @@ export default function PayrollPage() {
             </div>
           </div>
         )}
-      </main>
     </div>
   );
 }

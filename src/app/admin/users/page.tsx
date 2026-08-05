@@ -119,10 +119,7 @@ export default function UsersSubscribersPage() {
   const visibleAdminAccounts = activeSubTab === 'superadmins' ? superAdmins : adminsList;
 
   return (
-    <div className="flex min-h-screen theme-app-bg font-sans">
-      <AdminSidebar />
-
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
+    <div className="space-y-6 font-sans">
         
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
@@ -399,8 +396,6 @@ export default function UsersSubscribersPage() {
             </div>
           </div>
         )}
-
-      </main>
     </div>
   );
 }

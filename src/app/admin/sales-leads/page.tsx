@@ -62,10 +62,7 @@ export default function SalesLeadsPage() {
   const filteredLeads = leads.filter((lead) => `${lead.leadId} ${lead.clientName} ${lead.contactPerson} ${lead.phone} ${lead.email} ${lead.source} ${lead.leadType} ${lead.status}`.toLowerCase().includes(query.toLowerCase()));
 
   return (
-    <div className="flex min-h-screen theme-app-bg font-sans">
-      <AdminSidebar />
-
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
+    <div className="space-y-6 font-sans">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
           <div>
             <h1 className="text-2xl font-bold theme-app-heading flex items-center gap-2">
@@ -154,7 +151,6 @@ export default function SalesLeadsPage() {
             </div>
           </div>
         )}
-      </main>
     </div>
   );
 }

@@ -53,57 +53,37 @@
   }
 }
 
-/* GLOBAL THEME ENGINE - LIGHT & DARK MODES */
-:root, html.dark {
+/* GLOBAL THEME ENGINE - TRINETRA AGENCY OS DARK THEME */
+:root {
   --app-bg: #0B0D0F;
-  --app-card: #1E1F22;
-  --app-card-border: rgba(245, 198, 35, 0.25);
+  --app-card: #16181C;
+  --app-card-elevated: #1E2024;
+  --app-card-border: rgba(255, 255, 255, 0.08);
   --app-text-heading: #FFFFFF;
-  --app-text-body: #9CA3AF;
+  --app-text-body: rgba(255, 255, 255, 0.65);
+  --app-text-muted: rgba(255, 255, 255, 0.4);
   --app-accent: #F5C623;
+  --app-grid-line: rgba(255, 255, 255, 0.03);
 }
 
 html.light {
-  --app-bg: #F8FAFC;
+  --app-bg: #F6F7F9;
   --app-card: #FFFFFF;
-  --app-card-border: #E2E8F0;
-  --app-text-heading: #0F172A;
-  --app-text-body: #475569;
-  --app-accent: #D97706;
+  --app-card-elevated: #F0F2F5;
+  --app-card-border: rgba(0, 0, 0, 0.08);
+  --app-text-heading: #111827;
+  --app-text-body: #4B5563;
+  --app-text-muted: #9CA3AF;
+  --app-accent: #B8860B;
+  --app-grid-line: rgba(0, 0, 0, 0.04);
 }
 
-/* Universal Light Mode Overrides for ALL Pages */
-html.light body {
-  background-color: #F8FAFC !important;
-  color: #0F172A !important;
-}
-
-html.light .bg-slate-950,
-html.light .bg-slate-900 {
-  background-color: #F8FAFC !important;
-}
-
-html.light .bg-slate-850,
-html.light .bg-slate-800 {
-  background-color: #FFFFFF !important;
-  border-color: #E2E8F0 !important;
-}
-
-html.light .text-white,
-html.light .text-slate-100,
-html.light .text-slate-200 {
-  color: #0F172A !important;
-}
-
-html.light .text-slate-300,
-html.light .text-slate-400 {
-  color: #475569 !important;
-}
-
-html.light .border-slate-800,
-html.light .border-slate-850,
-html.light .border-slate-900 {
-  border-color: #E2E8F0 !important;
+.suraksha-grid-bg {
+  background-color: var(--app-bg);
+  background-image: 
+    linear-gradient(to right, var(--app-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--app-grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
 }
 
 /* FIX LIGHT MODE HOVER DARKENING IN DROPDOWNS & BUTTONS */

@@ -51,10 +51,7 @@ export default function SupportDeskAdminPage() {
   });
 
   return (
-    <div className="flex min-h-screen theme-app-bg font-sans">
-      <AdminSidebar />
-
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
+    <div className="space-y-6 font-sans">
         <div className="pb-4 border-b border-slate-200 dark:border-slate-800">
           <h1 className="text-2xl font-bold theme-app-heading flex items-center gap-2">
             <HelpCircle className="w-6 h-6 text-[#F5C623]" /> Website Contact Leads & Support Desk
@@ -96,7 +93,6 @@ export default function SupportDeskAdminPage() {
             </div>
           )}
         </div>
-      </main>
     </div>
   );
 }

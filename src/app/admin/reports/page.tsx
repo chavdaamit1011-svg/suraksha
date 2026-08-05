@@ -12,37 +12,33 @@ export default function ReportsPage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
-      <AdminSidebar />
+    <div className="space-y-6 font-sans">
+      <div className="pb-4 border-b border-white/[0.08]">
+        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <FileText className="w-6 h-6 text-[#F5C623]" /> Exportable Operations Reports
+        </h1>
+        <p className="text-xs text-white/55 mt-1">Download business analytics reports, attendance audits, and financial summaries.</p>
+      </div>
 
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
-        <div className="pb-4 border-b border-slate-900">
-          <h1 className="text-2xl font-black text-white flex items-center gap-2">
-            <FileText className="w-6 h-6 text-amber-400" /> Exportable Operations Reports
-          </h1>
-          <p className="text-xs text-slate-400">Download business analytics reports, attendance audits, and financial summaries.</p>
-        </div>
-
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
-          <h3 className="text-sm font-bold text-amber-400 font-sans">Available Reports Directory</h3>
-          <div className="space-y-3 text-xs">
-            {reports.map((r, idx) => (
-              <div key={idx} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between">
-                <div>
-                  <h5 className="font-bold text-white text-sm">{r.title}</h5>
-                  <p className="text-slate-400">{r.date} • Format: {r.format} ({r.size})</p>
-                </div>
-                <button
-                  onClick={() => alert(`Downloading ${r.title}...`)}
-                  className="px-4 py-2 bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-amber-400 font-bold rounded-xl transition flex items-center gap-1.5"
-                >
-                  <Download className="w-4 h-4" /> Download
-                </button>
+      <div className="trinetra-card border border-white/[0.08] rounded-xl p-6 space-y-4">
+        <h3 className="text-sm font-bold text-[#F5C623]">Available Reports Directory</h3>
+        <div className="space-y-3 text-xs">
+          {reports.map((r, idx) => (
+            <div key={idx} className="p-4 rounded-lg bg-[#111316] border border-white/[0.08] flex items-center justify-between">
+              <div>
+                <h5 className="font-bold text-white text-sm">{r.title}</h5>
+                <p className="text-white/55 mt-0.5">{r.date} • Format: {r.format} ({r.size})</p>
               </div>
-            ))}
-          </div>
+              <button
+                onClick={() => alert(`Downloading ${r.title}...`)}
+                className="px-3 py-1.5 bg-[#F5C623] hover:bg-[#E5B612] text-[#0B0D0F] font-bold rounded-md transition flex items-center gap-1.5"
+              >
+                <Download className="w-4 h-4" /> Download
+              </button>
+            </div>
+          ))}
         </div>
-      </main>
+      </div>
     </div>
   );
 }

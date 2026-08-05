@@ -13,28 +13,24 @@ export default function BranchesPage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans">
-      <AdminSidebar />
+    <div className="space-y-6 font-sans">
+      <div className="pb-4 border-b border-white/[0.08]">
+        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <Building className="w-6 h-6 text-[#F5C623]" /> Agency Branch Network
+        </h1>
+        <p className="text-xs text-white/55 mt-1">View Suraksha Security Agency office locations and regional hubs across India.</p>
+      </div>
 
-      <main className="flex-1 p-6 sm:p-8 space-y-6 overflow-y-auto">
-        <div className="pb-4 border-b border-slate-900">
-          <h1 className="text-2xl font-black text-white flex items-center gap-2">
-            <Building className="w-6 h-6 text-amber-400" /> Company Branch Network
-          </h1>
-          <p className="text-xs text-slate-400">View SURAKSHA office branch locations and regional command hubs across India.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {branches.map((b, idx) => (
-            <div key={idx} className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-3">
-              <span className="text-[10px] font-bold uppercase text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full">{b.status}</span>
-              <h3 className="font-bold text-white text-base">{b.name}</h3>
-              <p className="text-xs text-slate-400 flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-amber-400" /> {b.address}, {b.city}</p>
-              <p className="text-xs text-slate-300 pt-2 border-t border-slate-850">Branch Head: <span className="text-amber-400 font-bold">{b.manager}</span></p>
-            </div>
-          ))}
-        </div>
-      </main>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {branches.map((b, idx) => (
+          <div key={idx} className="trinetra-card border border-white/[0.08] p-5 rounded-xl space-y-3">
+            <span className="text-[10px] font-bold uppercase text-[#F5C623] bg-[#F5C623]/10 px-2 py-0.5 rounded">{b.status}</span>
+            <h3 className="font-bold text-white text-sm">{b.name}</h3>
+            <p className="text-xs text-white/55 flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-[#F5C623]" /> {b.address}, {b.city}</p>
+            <p className="text-xs text-white/70 pt-2 border-t border-white/[0.08]">Branch Head: <span className="text-[#F5C623] font-bold">{b.manager}</span></p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
