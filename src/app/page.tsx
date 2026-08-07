@@ -655,6 +655,7 @@ export default function HomePage() {
           <div className="flex flex-wrap justify-center gap-2 mb-10">
             {['corporate', 'armed', 'tenders', 'events'].map((t) => (
               <button
+                suppressHydrationWarning
                 key={t}
                 onClick={() => setActiveTab(t as any)}
                 className={`px-5 py-2.5 rounded-full text-xs font-bold transition ${
@@ -794,6 +795,7 @@ export default function HomePage() {
             {testimonials.length > 3 && (
               <div className="flex justify-end gap-2 -mt-4">
                 <button
+                  suppressHydrationWarning
                   aria-label="Previous reviews"
                   onClick={() => scrollTestimonials(-1)}
                   className="w-9 h-9 rounded-full theme-app-card border border-slate-300 dark:border-slate-800 hover:border-[#F5C623] text-[#F5C623] flex items-center justify-center shadow-xs"
@@ -801,6 +803,7 @@ export default function HomePage() {
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
+                  suppressHydrationWarning
                   aria-label="Next reviews"
                   onClick={() => scrollTestimonials(1)}
                   className="w-9 h-9 rounded-full theme-app-card border border-slate-300 dark:border-slate-800 hover:border-[#F5C623] text-[#F5C623] flex items-center justify-center shadow-xs"
@@ -831,6 +834,7 @@ export default function HomePage() {
 
             <div className="text-center">
               <button
+                suppressHydrationWarning
                 onClick={() => { setShowReviewForm(true); setReviewMessage(''); }}
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-[#F5C623]/50 text-[#F5C623] hover:bg-[#F5C623] hover:text-[#0B0D0F] text-xs font-bold transition shadow-xs"
               >
@@ -847,7 +851,7 @@ export default function HomePage() {
                       <h4 className="text-lg font-bold theme-app-heading">Share your experience</h4>
                       <p className="theme-app-body mt-1">Your review is published after admin approval.</p>
                     </div>
-                    <button type="button" onClick={() => setShowReviewForm(false)} className="text-xl theme-app-body hover:text-rose-400">×</button>
+                    <button suppressHydrationWarning type="button" onClick={() => setShowReviewForm(false)} className="text-xl theme-app-body hover:text-rose-400">×</button>
                   </div>
                   <input required placeholder="Your name" value={review.name} onChange={(e) => setReview({ ...review, name: e.target.value })} className="theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" />
                   <input placeholder="Role / designation" value={review.role} onChange={(e) => setReview({ ...review, role: e.target.value })} className="theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" />
@@ -856,14 +860,14 @@ export default function HomePage() {
                     <p className="theme-app-heading font-bold mb-2">Your rating</p>
                     <div className="flex gap-2">
                       {[1, 2, 3, 4, 5].map((rating) => (
-                        <button type="button" key={rating} onClick={() => setReview({ ...review, rating })} aria-label={`${rating} star rating`} className="p-1">
+                        <button suppressHydrationWarning type="button" key={rating} onClick={() => setReview({ ...review, rating })} aria-label={`${rating} star rating`} className="p-1">
                           <Star className={`w-7 h-7 transition ${rating <= review.rating ? 'fill-[#F5C623] text-[#F5C623]' : 'text-slate-500 hover:text-[#F5C623]'}`} />
                         </button>
                       ))}
                     </div>
                   </div>
                   <textarea required rows={4} placeholder="Write your review..." value={review.content} onChange={(e) => setReview({ ...review, content: e.target.value })} className="sm:col-span-2 theme-app-bg border border-slate-300 dark:border-slate-800 rounded-xl px-4 py-3 outline-none" />
-                  <button className="sm:col-span-2 trust-yellow-btn py-3 rounded-full text-xs font-bold">Submit Review for Approval</button>
+                  <button suppressHydrationWarning className="sm:col-span-2 trust-yellow-btn py-3 rounded-full text-xs font-bold">Submit Review for Approval</button>
                   {reviewMessage && <p className="sm:col-span-2 text-center text-xs text-emerald-500">{reviewMessage}</p>}
                 </form>
               </div>

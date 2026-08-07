@@ -21,8 +21,31 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body suppressHydrationWarning className={`${inter.variable} font-sans bg-slate-950 text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950 min-h-screen flex flex-col`}>
+    <html lang="en" className="light" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = sessionStorage.getItem('suraksha_theme');
+                  if (theme === 'dark') {
+                    document.documentElement.classList.remove('light');
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                  }
+                } catch (e) {
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.classList.add('light');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body suppressHydrationWarning className={`${inter.variable} font-sans theme-app-bg theme-app-heading antialiased selection:bg-amber-500 selection:text-slate-950 min-h-screen flex flex-col`}>
         {children}
         {/* Global AI Security Assistant Chatbot */}
         <SurakshaChatbot />

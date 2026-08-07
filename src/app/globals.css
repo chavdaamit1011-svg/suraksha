@@ -65,20 +65,8 @@
 
 
 
-/* GLOBAL THEME ENGINE - TRINETRA AGENCY OS DARK THEME */
-:root {
-  --app-bg: #0B0D0F;
-  --app-card: #16181C;
-  --app-card-border: rgba(255, 255, 255, 0.08);
-  --app-text-heading: #FFFFFF;
-  --app-text-body: rgba(255, 255, 255, 0.65);
-  --app-accent: #F5C623;
-  --app-accent-text: #F5C623;
-  --app-grid-line: rgba(255, 255, 255, 0.03);
-  --app-glow-radial: radial-gradient(circle at 50% 0%, rgba(245, 198, 35, 0.12) 0%, transparent 60%);
-}
-
-html.light {
+/* GLOBAL THEME ENGINE - DEFAULT LIGHT THEME */
+:root, html.light {
   --app-bg: #F7F7F8;
   --app-card: #FFFFFF;
   --app-card-border: rgba(0, 0, 0, 0.06);
@@ -88,6 +76,18 @@ html.light {
   --app-accent-text: #B8860B;
   --app-grid-line: rgba(0, 0, 0, 0.035);
   --app-glow-radial: radial-gradient(circle at 50% 0%, rgba(245, 198, 35, 0.22) 0%, rgba(253, 248, 226, 0.6) 40%, transparent 75%);
+}
+
+html.dark {
+  --app-bg: #0B0D0F;
+  --app-card: #16181C;
+  --app-card-border: rgba(255, 255, 255, 0.08);
+  --app-text-heading: #FFFFFF;
+  --app-text-body: rgba(255, 255, 255, 0.65);
+  --app-accent: #F5C623;
+  --app-accent-text: #F5C623;
+  --app-grid-line: rgba(255, 255, 255, 0.03);
+  --app-glow-radial: radial-gradient(circle at 50% 0%, rgba(245, 198, 35, 0.12) 0%, transparent 60%);
 }
 
 .suraksha-grid-bg {

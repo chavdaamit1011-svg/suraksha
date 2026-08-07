@@ -13,7 +13,7 @@ export default function Navbar() {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,8 +23,8 @@ export default function Navbar() {
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Read stored theme preference
-    const savedTheme = (localStorage.getItem('suraksha_theme') as 'dark' | 'light') || 'dark';
+    // Read stored theme preference (defaults to 'light')
+    const savedTheme = (sessionStorage.getItem('suraksha_theme') as 'dark' | 'light') || 'light';
     setTheme(savedTheme);
     applyTheme(savedTheme);
 
@@ -55,7 +55,7 @@ export default function Navbar() {
   const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
-    localStorage.setItem('suraksha_theme', nextTheme);
+    sessionStorage.setItem('suraksha_theme', nextTheme);
     applyTheme(nextTheme);
   };
 
@@ -157,6 +157,7 @@ export default function Navbar() {
               
               {/* 1. Theme Toggle Icon */}
               <button
+                suppressHydrationWarning
                 onClick={toggleTheme}
                 className={`p-2 rounded-xl border transition flex items-center justify-center shadow-inner hover:scale-105 ${
                   theme === 'light'
@@ -171,6 +172,7 @@ export default function Navbar() {
               {/* 2. Standard Login / Sign Up Dropdown */}
               <div className="relative">
                 <button
+                  suppressHydrationWarning
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                   className={`p-2 rounded-xl border transition flex items-center gap-1.5 hover:scale-105 ${
                     theme === 'light'
@@ -223,6 +225,7 @@ export default function Navbar() {
                         )}
 
                         <button
+                          suppressHydrationWarning
                           onClick={handleLogout}
                           className="w-full text-left flex items-center gap-2 px-3.5 py-2 text-xs text-rose-500 hover:bg-rose-500/10 transition border-t border-slate-200 dark:border-slate-800 mt-1"
                         >
@@ -259,6 +262,7 @@ export default function Navbar() {
               {/* 3. Notification Bell Icon & Drawer */}
               <div className="relative">
                 <button
+                  suppressHydrationWarning
                   onClick={() => setNotificationsOpen(!notificationsOpen)}
                   className={`relative p-2 rounded-xl border transition flex items-center justify-center ${
                     theme === 'light'
@@ -348,6 +352,7 @@ export default function Navbar() {
 
           <div className="pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
             <button
+              suppressHydrationWarning
               onClick={toggleTheme}
               className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-[#1E1F22] border border-slate-300 dark:border-slate-700 text-[#F5C623] text-xs font-bold flex items-center gap-2"
             >
