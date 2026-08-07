@@ -14,6 +14,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
+    // Ensure Admin Panel always uses dark class on html root
+    document.documentElement.classList.remove('light');
+    document.documentElement.classList.add('dark');
+
     // Exclude /admin/login from Auth Guard check
     if (pathname === '/admin/login') {
       setAuthorized(true);

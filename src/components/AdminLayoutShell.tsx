@@ -9,7 +9,7 @@ export default function AdminLayoutShell({ children }: { children: React.ReactNo
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen w-full bg-[#0B0D0F] text-white font-sans overflow-hidden trinetra-grid-bg">
+    <div className="admin-shell flex h-screen w-full bg-[#0B0D0F] text-white font-sans overflow-hidden trinetra-grid-bg">
       {/* Desktop Fixed Left Sidebar (276px) */}
       <div className="hidden lg:block h-full">
         <AdminSidebar />

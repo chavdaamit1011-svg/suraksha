@@ -42,13 +42,11 @@ export default function SurakshaLoader({
 
   return (
     <div
+      style={{ backgroundColor: '#0B0D0F', color: '#FFFFFF' }}
       className={`${
         fullScreen ? 'fixed inset-0 z-50 min-h-screen w-full' : 'w-full py-12'
-      } bg-[#090A0C] text-white flex flex-col items-center justify-center font-sans overflow-hidden select-none`}
+      } bg-[#0B0D0F] text-white flex flex-col items-center justify-center font-sans overflow-hidden select-none`}
     >
-      {/* Background Radial Gold Glow */}
-      <div className="absolute w-[500px] h-[500px] bg-[#F5C623]/[0.05] rounded-full blur-[120px] pointer-events-none" />
-
       {/* Main Center Container */}
       <div className="relative flex flex-col items-center justify-center z-10 space-y-7">
         {/* Shield with Rotating Gold Ring */}
@@ -60,7 +58,7 @@ export default function SurakshaLoader({
                 <stop offset="0%" stopColor="#FFE066" stopOpacity="1" />
                 <stop offset="40%" stopColor="#F5C623" stopOpacity="0.9" />
                 <stop offset="75%" stopColor="#D4AF37" stopOpacity="0.3" />
-                <stop offset="100%" stopColor="#090A0C" stopOpacity="0" />
+                <stop offset="100%" stopColor="#0B0D0F" stopOpacity="0" />
               </linearGradient>
             </defs>
             {/* Background thin track */}
@@ -70,7 +68,7 @@ export default function SurakshaLoader({
               r="46"
               fill="none"
               stroke="#F5C623"
-              strokeOpacity="0.1"
+              strokeOpacity="0.15"
               strokeWidth="1.5"
             />
             {/* Rotating gradient arc */}
@@ -86,16 +84,13 @@ export default function SurakshaLoader({
             />
           </svg>
 
-          {/* Pulse aura glow behind shield */}
-          <div className="absolute w-28 h-28 bg-[#F5C623]/15 rounded-full blur-xl animate-pulse" />
-
           {/* Official Suraksha Mark Logo Image */}
           <div className="relative z-10 w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/suraksha-mark.png"
               alt="SURAKSHA Mark Logo"
-              className="w-full h-full object-contain drop-shadow-[0_0_24px_rgba(245,198,35,0.6)] animate-pulse"
+              className="w-full h-full object-contain"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = '/logo.png';
               }}
@@ -106,18 +101,27 @@ export default function SurakshaLoader({
         {/* Text Details Section */}
         <div className="flex flex-col items-center text-center space-y-2.5">
           {/* Main Brand Title */}
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-[0.45em] uppercase pl-[0.45em] drop-shadow-[0_2px_12px_rgba(255,255,255,0.3)] font-sans">
+          <h1
+            style={{ color: '#FFFFFF' }}
+            className="text-2xl sm:text-3xl font-black text-white tracking-[0.45em] uppercase pl-[0.45em] font-sans"
+          >
             {text}
           </h1>
 
           {/* Subtitle */}
-          <p className="text-[10px] sm:text-xs font-bold text-[#F5C623] tracking-[0.32em] pl-[0.32em] uppercase opacity-90 font-sans">
+          <p
+            style={{ color: '#F5C623' }}
+            className="text-[10px] sm:text-xs font-bold text-[#F5C623] tracking-[0.32em] pl-[0.32em] uppercase font-sans"
+          >
             {subtext}
           </p>
 
           {/* Animated Percentage Counter */}
           <div className="pt-3">
-            <span className="text-xs font-mono font-bold text-slate-400/90 tracking-[0.3em] pl-[0.3em]">
+            <span
+              style={{ color: '#94A3B8' }}
+              className="text-xs font-mono font-bold text-slate-400 tracking-[0.3em] pl-[0.3em]"
+            >
               {formattedPercent}
             </span>
           </div>

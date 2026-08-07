@@ -118,46 +118,68 @@ html.dark {
   box-shadow: 0 14px 36px rgba(245, 198, 35, 0.08);
 }
 
-/* Universal Light Mode Overrides for ALL Pages */
-html.light body {
-  background-color: #F7F7F8 !important;
-  color: #18181B !important;
+/* ADMIN SHELL PERMANENT HIGH-CONTRAST DARK STYLING OVERRIDES */
+.admin-shell,
+.admin-shell * {
+  --app-bg: #0B0D0F;
+  --app-card: #16181C;
+  --app-card-border: rgba(255, 255, 255, 0.08);
+  --app-text-heading: #FFFFFF;
+  --app-text-body: rgba(255, 255, 255, 0.65);
 }
 
-html.light .bg-slate-950,
-html.light .bg-slate-900 {
-  background-color: #F7F7F8 !important;
+.admin-shell {
+  background-color: #0B0D0F !important;
+  color: #FFFFFF !important;
 }
 
-html.light .bg-slate-850,
-html.light .bg-slate-800 {
-  background-color: #FFFFFF !important;
-  border-color: rgba(0, 0, 0, 0.06) !important;
+.admin-shell .text-white {
+  color: #FFFFFF !important;
 }
 
-html.light .text-white,
-html.light .text-slate-100,
-html.light .text-slate-200 {
-  color: #18181B !important;
+.admin-shell .text-white\/70,
+.admin-shell .text-white\/60,
+.admin-shell .text-white\/55,
+.admin-shell .text-white\/50,
+.admin-shell .text-white\/40 {
+  color: rgba(255, 255, 255, 0.75) !important;
 }
 
-html.light .text-slate-300,
-html.light .text-slate-400 {
-  color: #52525B !important;
+.admin-shell .text-slate-100,
+.admin-shell .text-slate-200 {
+  color: #F4F4F5 !important;
 }
 
-html.light .border-slate-800,
-html.light .border-slate-850,
-html.light .border-slate-900 {
-  border-color: rgba(0, 0, 0, 0.06) !important;
+.admin-shell .text-slate-300,
+.admin-shell .text-slate-400 {
+  color: #A1A1AA !important;
 }
 
-/* FIX LIGHT MODE HOVER DARKENING IN DROPDOWNS & BUTTONS */
-html.light .hover\:bg-slate-900:hover,
-html.light .hover\:bg-slate-850:hover,
-html.light .hover\:bg-slate-800:hover {
-  background-color: #F4F4F5 !important;
-  color: #B8860B !important;
+.admin-shell .text-slate-500,
+.admin-shell .text-slate-600 {
+  color: #71717A !important;
+}
+
+.admin-shell .bg-\[\#111316\] {
+  background-color: #111316 !important;
+}
+
+.admin-shell .bg-\[\#1E1F22\] {
+  background-color: #1E1F22 !important;
+}
+
+.admin-shell .bg-\[\#0B0D0F\] {
+  background-color: #0B0D0F !important;
+}
+
+.admin-shell .border-white\/\[0\.08\],
+.admin-shell .border-white\/\[0\.04\],
+.admin-shell .border-white\/10 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.admin-shell .border-l-2.border-\[\#F5C623\] {
+  color: #FFFFFF !important;
 }
 
 /* Custom Theme Classes */
