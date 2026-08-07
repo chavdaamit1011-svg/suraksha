@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer utilities {
   /* Eye Blink Animation for Cyber Surveillance Chatbot */
   @keyframes eyeBlink {

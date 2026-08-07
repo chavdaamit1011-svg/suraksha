@@ -13,7 +13,18 @@ export default function Navbar() {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
-  const [theme, setTheme] = useState<'dark' | 'light'>('light');
+  const [mounted, setMounted] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem('suraksha_theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+    }
+    return 'light';
+  });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,10 +34,8 @@ export default function Navbar() {
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Read stored theme preference (defaults to 'light')
-    const savedTheme = (sessionStorage.getItem('suraksha_theme') as 'dark' | 'light') || 'light';
-    setTheme(savedTheme);
-    applyTheme(savedTheme);
+    // Sync theme class to document element
+    applyTheme(theme);
 
     // Read current user session
     const savedUser = localStorage.getItem('suraksha_user');
@@ -39,7 +48,7 @@ export default function Navbar() {
     }
 
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [pathname]);
+  }, [pathname, theme]);
 
   const applyTheme = (t: 'dark' | 'light') => {
     const root = document.documentElement;
@@ -83,15 +92,11 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 font-sans">
+    <header suppressHydrationWarning className="fixed top-0 left-0 right-0 z-40 font-sans">
       {/* 1. Official Government Top Utility Bar */}
-      <div className={`border-b text-xs font-semibold px-4 sm:px-8 flex items-center justify-between overflow-hidden transition-[max-height,opacity,transform,padding,border-color] duration-300 ease-out ${
+      <div suppressHydrationWarning className={`border-b text-xs font-semibold px-4 sm:px-8 flex items-center justify-between overflow-hidden transition-[max-height,opacity,transform,padding,border-color] duration-300 ease-out ${
         isScrolled ? 'max-h-0 py-0 opacity-0 -translate-y-full border-transparent pointer-events-none' : 'max-h-10 py-1.5 opacity-100 translate-y-0'
-      } ${
-        theme === 'light'
-          ? 'bg-slate-200 border-slate-300 text-slate-800'
-          : 'bg-[#0B0D0F] border-amber-500/20 text-slate-300'
-      }`}>
+      } bg-slate-200 dark:bg-[#0B0D0F] border-slate-300 dark:border-amber-500/20 text-slate-800 dark:text-slate-300`}>
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 font-bold text-[#F5C623]">
             🇮🇳 GOVERNMENT ACCREDITED SECURITY PORTAL
@@ -111,16 +116,13 @@ export default function Navbar() {
       </div>
 
       {/* 2. Main Navbar Bar */}
-      <div className={`transition-[padding] duration-300 ease-out ${isScrolled ? 'pt-3 px-4 sm:px-8' : 'pt-0 px-0'}`}>
+      <div suppressHydrationWarning className={`transition-[padding] duration-300 ease-out ${isScrolled ? 'pt-3 px-4 sm:px-8' : 'pt-0 px-0'}`}>
         <div
+          suppressHydrationWarning
           className={`transition-[background-color,border-color,border-radius,box-shadow,padding,max-width] duration-300 ease-out ${
             isScrolled
-              ? theme === 'light'
-                ? 'max-w-7xl mx-auto rounded-2xl bg-white/98 border border-slate-200 px-4 sm:px-6 py-2 shadow-xl backdrop-blur-xl'
-                : 'max-w-7xl mx-auto rounded-2xl bg-[#0B0D0F]/98 border border-amber-500/35 px-4 sm:px-6 py-2 shadow-2xl backdrop-blur-xl'
-              : theme === 'light'
-              ? 'bg-white/95 border-b border-slate-200 px-4 sm:px-8 py-2.5 backdrop-blur-md'
-              : 'bg-[#0B0D0F]/90 border-b border-[#1E1F22] px-4 sm:px-8 py-2.5 backdrop-blur-md'
+              ? 'max-w-7xl mx-auto rounded-2xl bg-white/98 dark:bg-[#0B0D0F]/98 border border-slate-200 dark:border-amber-500/35 px-4 sm:px-6 py-2 shadow-xl backdrop-blur-xl'
+              : 'bg-white/95 dark:bg-[#0B0D0F]/90 border-b border-slate-200 dark:border-[#1E1F22] px-4 sm:px-8 py-2.5 backdrop-blur-md'
           }`}
         >
           <div className="flex items-center justify-between h-12">
@@ -141,9 +143,7 @@ export default function Navbar() {
                     className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition duration-200 ${
                       isActive
                         ? 'text-[#F5C623] bg-[#F5C623]/15 border border-[#F5C623]/30'
-                        : theme === 'light'
-                        ? 'text-slate-800 hover:text-[#F5C623] hover:bg-slate-100'
-                        : 'text-slate-200 hover:text-[#F5C623] hover:bg-[#1E1F22]'
+                        : 'text-slate-800 dark:text-slate-200 hover:text-[#F5C623] hover:bg-slate-100 dark:hover:bg-[#1E1F22]'
                     }`}
                   >
                     {link.name}
@@ -159,14 +159,11 @@ export default function Navbar() {
               <button
                 suppressHydrationWarning
                 onClick={toggleTheme}
-                className={`p-2 rounded-xl border transition flex items-center justify-center shadow-inner hover:scale-105 ${
-                  theme === 'light'
-                    ? 'bg-slate-100 border-slate-300 text-slate-800'
-                    : 'bg-[#1E1F22] border-slate-700 text-[#F5C623]'
-                }`}
-                title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                className="p-2 rounded-xl border transition flex items-center justify-center shadow-inner hover:scale-105 bg-slate-100 dark:bg-[#1E1F22] border-slate-300 dark:border-slate-700 text-slate-800 dark:text-[#F5C623]"
+                title="Toggle Theme"
               >
-                {theme === 'dark' ? <Sun className="w-4 h-4 text-[#F5C623]" /> : <Moon className="w-4 h-4 text-slate-800" />}
+                <Sun className="w-4 h-4 text-[#F5C623] hidden dark:block" />
+                <Moon className="w-4 h-4 text-slate-800 block dark:hidden" />
               </button>
 
               {/* 2. Standard Login / Sign Up Dropdown */}
@@ -174,11 +171,7 @@ export default function Navbar() {
                 <button
                   suppressHydrationWarning
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className={`p-2 rounded-xl border transition flex items-center gap-1.5 hover:scale-105 ${
-                    theme === 'light'
-                      ? 'bg-slate-100 border-slate-300 text-slate-800'
-                      : 'bg-[#1E1F22] border-slate-700 text-[#F5C623]'
-                  }`}
+                  className="p-2 rounded-xl border transition flex items-center gap-1.5 hover:scale-105 bg-slate-100 dark:bg-[#1E1F22] border-slate-300 dark:border-slate-700 text-slate-800 dark:text-[#F5C623]"
                   title="User Account"
                 >
                   {currentUser ? (
@@ -192,11 +185,7 @@ export default function Navbar() {
                 </button>
 
                 {userDropdownOpen && (
-                  <div className={`absolute right-0 mt-3 w-48 rounded-2xl py-2 shadow-2xl backdrop-blur-xl z-50 animate-fadeIn font-sans border ${
-                    theme === 'light'
-                      ? 'bg-white border-slate-200 text-slate-800'
-                      : 'bg-[#0B0D0F] border-[#F5C623]/30 text-slate-200'
-                  }`}>
+                  <div className="absolute right-0 mt-3 w-48 rounded-2xl py-2 shadow-2xl backdrop-blur-xl z-50 animate-fadeIn font-sans border bg-white dark:bg-[#0B0D0F] border-slate-200 dark:border-[#F5C623]/30 text-slate-800 dark:text-slate-200">
                     {currentUser ? (
                       <>
                         <div className="px-3.5 py-2.5 border-b border-slate-200 dark:border-slate-800">
@@ -264,11 +253,7 @@ export default function Navbar() {
                 <button
                   suppressHydrationWarning
                   onClick={() => setNotificationsOpen(!notificationsOpen)}
-                  className={`relative p-2 rounded-xl border transition flex items-center justify-center ${
-                    theme === 'light'
-                      ? 'bg-slate-100 border-slate-300 text-slate-800'
-                      : 'bg-[#1E1F22] border-slate-700 text-slate-300 hover:text-[#F5C623]'
-                  }`}
+                  className="relative p-2 rounded-xl border transition flex items-center justify-center bg-slate-100 dark:bg-[#1E1F22] border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-300 hover:text-[#F5C623]"
                   aria-label="Notifications"
                 >
                   <Bell className="w-4 h-4" />
@@ -277,11 +262,7 @@ export default function Navbar() {
                 </button>
 
                 {notificationsOpen && (
-                  <div className={`absolute right-0 mt-3 w-80 rounded-2xl p-4 shadow-2xl backdrop-blur-xl z-50 animate-fadeIn border ${
-                    theme === 'light'
-                      ? 'bg-white border-slate-200 text-slate-800'
-                      : 'bg-[#0B0D0F] border-[#F5C623]/30 text-slate-100'
-                  }`}>
+                  <div className="absolute right-0 mt-3 w-80 rounded-2xl p-4 shadow-2xl backdrop-blur-xl z-50 animate-fadeIn border bg-white dark:bg-[#0B0D0F] border-slate-200 dark:border-[#F5C623]/30 text-slate-800 dark:text-slate-100">
                     <div className="flex items-center justify-between pb-2.5 border-b border-slate-200 dark:border-slate-800">
                       <span className="font-bold text-[#F5C623] text-xs flex items-center gap-2">
                         <Bell className="w-3.5 h-3.5" /> Operations Alerts
@@ -292,9 +273,7 @@ export default function Navbar() {
                     </div>
                     <div className="space-y-2.5 mt-2.5 max-h-64 overflow-y-auto">
                       {dummyNotifications.map((n) => (
-                        <div key={n.id} className={`p-2.5 rounded-xl text-xs border ${
-                          theme === 'light' ? 'bg-slate-50 border-slate-200' : 'bg-[#1E1F22] border-slate-800'
-                        }`}>
+                        <div key={n.id} className="p-2.5 rounded-xl text-xs border bg-slate-50 dark:bg-[#1E1F22] border-slate-200 dark:border-slate-800">
                           <div className="flex justify-between font-semibold">
                             <span>{n.title}</span>
                             <span className="text-[10px] text-slate-500">{n.time}</span>
@@ -321,9 +300,7 @@ export default function Navbar() {
             <button
               suppressHydrationWarning
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className={`lg:hidden p-1.5 rounded-xl border ${
-                theme === 'light' ? 'bg-slate-100 border-slate-300 text-slate-800' : 'bg-[#1E1F22] border-slate-700 text-slate-300'
-              }`}
+              className="lg:hidden p-1.5 rounded-xl border bg-slate-100 dark:bg-[#1E1F22] border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-300"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -334,9 +311,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className={`lg:hidden border-b p-4 space-y-3 animate-fadeIn shadow-2xl ${
-          theme === 'light' ? 'bg-white border-slate-200 text-slate-800' : 'bg-[#0B0D0F] border-[#F5C623]/30 text-slate-100'
-        }`}>
+        <div className="lg:hidden border-b p-4 space-y-3 animate-fadeIn shadow-2xl bg-white dark:bg-[#0B0D0F] border-slate-200 dark:border-[#F5C623]/30 text-slate-800 dark:text-slate-100">
           <div className="grid grid-cols-2 gap-1.5">
             {navLinks.map((link) => (
               <Link
@@ -356,7 +331,9 @@ export default function Navbar() {
               onClick={toggleTheme}
               className="px-3.5 py-2 rounded-xl bg-slate-100 dark:bg-[#1E1F22] border border-slate-300 dark:border-slate-700 text-[#F5C623] text-xs font-bold flex items-center gap-2"
             >
-              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4 text-slate-800" />} Theme
+              <Sun className="w-4 h-4 text-[#F5C623] hidden dark:block" />
+              <Moon className="w-4 h-4 text-slate-800 block dark:hidden" />
+              Theme
             </button>
 
             <Link
