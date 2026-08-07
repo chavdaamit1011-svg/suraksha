@@ -315,6 +315,7 @@ export default function Navbar() {
 
             {/* Mobile Menu Toggle */}
             <button
+              suppressHydrationWarning
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className={`lg:hidden p-1.5 rounded-xl border ${
                 theme === 'light' ? 'bg-slate-100 border-slate-300 text-slate-800' : 'bg-[#1E1F22] border-slate-700 text-slate-300'

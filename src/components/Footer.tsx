@@ -230,8 +230,8 @@ export default function Footer() {
             <p className="text-xs theme-app-body mt-1">Get safety advisories, deployment updates, and SURAKSHA service news. You can unsubscribe anytime.</p>
           </div>
           <form onSubmit={subscribe} className="w-full lg:w-auto flex flex-col sm:flex-row gap-2">
-            <input type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="you@company.com" className="min-w-0 sm:w-72 rounded-xl px-4 py-3 text-xs theme-app-heading theme-app-bg border border-slate-300 dark:border-slate-700 focus:border-[#F5C623] outline-none" />
-            <button disabled={newsletterLoading} type="submit" className="trust-yellow-btn px-5 py-3 rounded-xl text-xs font-bold flex justify-center items-center gap-2">{newsletterLoading ? 'Subscribing...' : <><Send className="w-4 h-4" /> Subscribe</>}</button>
+            <input suppressHydrationWarning type="email" required value={newsletterEmail} onChange={(event) => setNewsletterEmail(event.target.value)} placeholder="you@company.com" className="min-w-0 sm:w-72 rounded-xl px-4 py-3 text-xs theme-app-heading theme-app-bg border border-slate-300 dark:border-slate-700 focus:border-[#F5C623] outline-none" />
+            <button suppressHydrationWarning disabled={newsletterLoading} type="submit" className="trust-yellow-btn px-5 py-3 rounded-xl text-xs font-bold flex justify-center items-center gap-2">{newsletterLoading ? 'Subscribing...' : <><Send className="w-4 h-4" /> Subscribe</>}</button>
           </form>
           {newsletterMessage && <p className="text-xs text-emerald-500 flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> {newsletterMessage}</p>}
         </div>

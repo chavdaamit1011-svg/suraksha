@@ -18,14 +18,19 @@ const quickReplies = [
 export default function SurakshaChatbot() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = React.useState(false);
 
-  // Hide public chatbot on admin routes (AdminChatbot takes over on /admin/*)
-  if (pathname.startsWith('/admin')) {
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Hide public chatbot on admin routes or until mounted on client
+  if (!mounted || pathname.startsWith('/admin')) {
     return null;
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-[120] flex flex-col items-end gap-3 font-sans select-none">
+    <div suppressHydrationWarning className="fixed bottom-6 right-6 z-[120] flex flex-col items-end gap-3 font-sans select-none">
       
       {/* Chat Drawer Window */}
       <AnimatePresence>
@@ -102,6 +107,7 @@ export default function SurakshaChatbot() {
 
       {/* DIRECT FLOATING FLATICON CHATBOT ROBOT MATCHED WITH SURAKSHA TRUST YELLOW THEME */}
       <button
+        suppressHydrationWarning
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? 'Close chat' : 'Open chat'}

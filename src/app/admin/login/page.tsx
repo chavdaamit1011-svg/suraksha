@@ -36,6 +36,7 @@ export default function AuthPortalPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const [otp, setOtp] = useState('');
+  const [demoOtp, setDemoOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -60,11 +61,15 @@ export default function AuthPortalPage() {
         setAuthenticatedUser(data.user);
 
         // Send OTP
-        await fetch('/api/auth/otp', {
+        const otpRes = await fetch('/api/auth/otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'send', email }),
         });
+        const otpData = await otpRes.json();
+        const activeOtp = otpData.otpForDemo || '123456';
+        setDemoOtp(activeOtp);
+        setOtp(activeOtp);
 
         setLoading(false);
         setStep('otp');
@@ -105,11 +110,15 @@ export default function AuthPortalPage() {
         setAuthenticatedUser(data.user);
 
         // Send OTP
-        await fetch('/api/auth/otp', {
+        const otpRes = await fetch('/api/auth/otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'send', email }),
         });
+        const otpData = await otpRes.json();
+        const activeOtp = otpData.otpForDemo || '123456';
+        setDemoOtp(activeOtp);
+        setOtp(activeOtp);
 
         setLoading(false);
         setStep('otp');
@@ -394,9 +403,22 @@ export default function AuthPortalPage() {
           <form onSubmit={handleOtpVerify} className="space-y-5">
             <div className="p-4 rounded-2xl bg-[#F5C623]/10 border border-[#F5C623]/30 text-center space-y-1">
               <h4 className="text-sm font-bold text-[#F5C623] flex items-center justify-center gap-2">
-                <KeyRound className="w-4 h-4" /> Enter 6-Digit OTP
+                <KeyRound className="w-4 h-4" /> Enter 6-Digit OTP Passkey
               </h4>
-              <p className="text-xs theme-app-body">A one-time passcode has been sent to {email}</p>
+              <p className="text-xs theme-app-body">Authentication code sent for <strong className="text-white">{email}</strong></p>
+            </div>
+
+            {/* Prominent Demo / Testing OTP Display Badge */}
+            <div className="p-4 rounded-2xl bg-[#F5C623]/15 border border-[#F5C623]/40 text-center space-y-2 shadow-xl animate-fadeIn">
+              <div className="text-[11px] font-black text-[#F5C623] uppercase tracking-wider flex items-center justify-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#F5C623]" /> Demo & Testing Verification OTP
+              </div>
+              <div className="text-2xl font-mono font-black tracking-[0.4em] text-[#F5C623] bg-[#0B0D0F] py-2.5 px-4 rounded-xl border border-[#F5C623]/40 inline-block shadow-inner">
+                {demoOtp || '123456'}
+              </div>
+              <p className="text-[11px] theme-app-body">
+                (Pre-filled automatically for quick testing! You can also use code: <span className="text-[#F5C623] font-bold">123456</span>)
+              </p>
             </div>
 
             <div>
