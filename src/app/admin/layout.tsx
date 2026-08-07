@@ -6,6 +6,7 @@ import { ShieldAlert, Loader2 } from 'lucide-react';
 import Logo from '@/components/Logo';
 import AdminLayoutShell from '@/components/AdminLayoutShell';
 import AdminChatbot from '@/components/AdminChatbot';
+import SurakshaLoader from '@/components/SurakshaLoader';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -51,15 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   if (checking) {
-    return (
-      <div className="min-h-screen bg-[#0B0D0F] text-white flex flex-col items-center justify-center space-y-4 font-sans trinetra-grid-bg">
-        <Logo size="lg" />
-        <div className="flex items-center gap-3 text-[#F5C623] font-bold text-xs bg-[#1E1F22] border border-[#F5C623]/30 px-5 py-2.5 rounded-xl shadow-2xl">
-          <Loader2 className="w-4 h-4 animate-spin text-[#F5C623]" />
-          <span>Verifying SURAKSHA Security Clearance & Admin Token...</span>
-        </div>
-      </div>
-    );
+    return <SurakshaLoader fullScreen targetPercent={94} text="SURAKSHA" subtext="VERIFYING SECURITY CLEARANCE" />;
   }
 
   if (!authorized) {
