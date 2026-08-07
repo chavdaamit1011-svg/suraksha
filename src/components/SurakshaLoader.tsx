@@ -89,94 +89,17 @@ export default function SurakshaLoader({
           {/* Pulse aura glow behind shield */}
           <div className="absolute w-28 h-28 bg-[#F5C623]/15 rounded-full blur-xl animate-pulse" />
 
-          {/* Golden Shield Icon matching screenshot */}
-          <div className="relative z-10 w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center drop-shadow-[0_0_20px_rgba(245,198,35,0.45)]">
-            <svg
-              viewBox="0 0 100 110"
-              className="w-full h-full"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <defs>
-                <linearGradient id="shieldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#FFE885" />
-                  <stop offset="50%" stopColor="#F5C623" />
-                  <stop offset="100%" stopColor="#997000" />
-                </linearGradient>
-
-                <linearGradient id="shieldInnerGlow" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#332A10" stopOpacity="0.95" />
-                  <stop offset="100%" stopColor="#141006" stopOpacity="0.98" />
-                </linearGradient>
-
-                <linearGradient id="sGoldPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#FFF099" />
-                  <stop offset="40%" stopColor="#F5C623" />
-                  <stop offset="100%" stopColor="#B8860B" />
-                </linearGradient>
-
-                <linearGradient id="sGoldSecondary" x1="100%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#FFE066" />
-                  <stop offset="60%" stopColor="#D49B00" />
-                  <stop offset="100%" stopColor="#7A5200" />
-                </linearGradient>
-
-                <filter id="goldDropGlow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="2.5" result="blur" />
-                  <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                </filter>
-              </defs>
-
-              {/* Shield Outer Shell */}
-              <path
-                d="M50 6 L88 22 C88 66 68 92 50 102 C32 92 12 66 12 22 L50 6 Z"
-                fill="url(#shieldInnerGlow)"
-                stroke="url(#shieldBorder)"
-                strokeWidth="4"
-                strokeLinejoin="round"
-                filter="url(#goldDropGlow)"
-              />
-
-              {/* Inner Shield Bezel Line */}
-              <path
-                d="M50 13 L81 26 C81 62 63 85 50 94 C37 85 19 62 19 26 L50 13 Z"
-                fill="none"
-                stroke="url(#shieldBorder)"
-                strokeWidth="1.2"
-                strokeOpacity="0.35"
-              />
-
-              {/* Modern Golden "S" Shield Emblem Ribbons */}
-              {/* Upper S Ribbon */}
-              <path
-                d="M32 34 C32 28 68 28 68 37 C68 46 34 46 34 56 L64 56"
-                fill="none"
-                stroke="url(#sGoldPrimary)"
-                strokeWidth="7.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-
-              {/* Lower S Ribbon Interlock */}
-              <path
-                d="M36 56 C36 66 68 66 68 74 C68 82 32 82 32 75"
-                fill="none"
-                stroke="url(#sGoldSecondary)"
-                strokeWidth="7.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-
-              {/* Center Accent Slash */}
-              <path
-                d="M42 46 L58 64"
-                fill="none"
-                stroke="#FFE885"
-                strokeWidth="3"
-                strokeLinecap="round"
-                opacity="0.8"
-              />
-            </svg>
+          {/* Official Suraksha Mark Logo Image */}
+          <div className="relative z-10 w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/suraksha-mark.png"
+              alt="SURAKSHA Mark Logo"
+              className="w-full h-full object-contain drop-shadow-[0_0_24px_rgba(245,198,35,0.6)] animate-pulse"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/logo.png';
+              }}
+            />
           </div>
         </div>
 
