@@ -8,6 +8,11 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 export const metadata: Metadata = {
   title: 'SURAKSHA | Enterprise Security Guarding & Command Platform',
   description: 'ISO 9001:2015 & Govt certified armed and unarmed security guard deployment platform with 24/7 command center live tracking.',
+  icons: {
+    icon: '/suraksha-mark.png',
+    shortcut: '/suraksha-mark.png',
+    apple: '/suraksha-mark.png',
+  },
 };
 
 export default function RootLayout({
