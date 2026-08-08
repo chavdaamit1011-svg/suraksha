@@ -240,7 +240,7 @@ export default function AuthPortalPage() {
                     <input
                       type="text"
                       required
-                      placeholder="Username, Email or Mobile (e.g. amit_suraksha, name@mail.com, 9876543210)"
+                      placeholder="Enter Username, Email or Mobile Number"
                       value={identifier}
                       onChange={(e) => setIdentifier(e.target.value)}
                       className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl pl-11 pr-4 py-3 text-xs theme-app-heading outline-none transition"
@@ -297,7 +297,7 @@ export default function AuthPortalPage() {
                       <input
                         type="text"
                         required
-                        placeholder="Rajiv Malhotra"
+                        placeholder="Enter Full Name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl pl-11 pr-4 py-3 text-xs theme-app-heading outline-none transition"
@@ -312,7 +312,7 @@ export default function AuthPortalPage() {
                       <input
                         type="text"
                         required
-                        placeholder="rajiv_suraksha"
+                        placeholder="Choose Username (e.g. user_suraksha)"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl pl-11 pr-4 py-3 text-xs theme-app-heading outline-none transition"
@@ -329,7 +329,7 @@ export default function AuthPortalPage() {
                     <input
                       type="email"
                       required
-                      placeholder="rajiv@techpark.com"
+                      placeholder="name@example.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl pl-11 pr-4 py-3 text-xs theme-app-heading outline-none transition"
@@ -346,7 +346,7 @@ export default function AuthPortalPage() {
                       <input
                         type="tel"
                         required
-                        placeholder="+91 98765 43210"
+                        placeholder="+91 90000 00000"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl pl-11 pr-4 py-3 text-xs theme-app-heading outline-none transition"
@@ -360,7 +360,7 @@ export default function AuthPortalPage() {
                       <Building2 className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
                       <input
                         type="text"
-                        placeholder="Global Tech Park"
+                        placeholder="Enter Company or Organization Name"
                         value={company}
                         onChange={(e) => setCompany(e.target.value)}
                         className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl pl-11 pr-4 py-3 text-xs theme-app-heading outline-none transition"
