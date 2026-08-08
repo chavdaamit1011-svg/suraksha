@@ -27,7 +27,9 @@ export default function AuthPortalPage() {
   const [authenticatedUser, setAuthenticatedUser] = useState<any>(null);
 
   // Form Fields
+  const [identifier, setIdentifier] = useState('');
   const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [company, setCompany] = useState('');
@@ -50,7 +52,7 @@ export default function AuthPortalPage() {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ identifier, password }),
       });
 
       const data = await res.json();
@@ -61,10 +63,12 @@ export default function AuthPortalPage() {
         setAuthenticatedUser(data.user);
 
         // Send OTP
+        const userEmail = data.user?.email || identifier;
+        setEmail(userEmail);
         const otpRes = await fetch('/api/auth/otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'send', email }),
+          body: JSON.stringify({ action: 'send', email: userEmail }),
         });
         const otpData = await otpRes.json();
         const activeOtp = otpData.otpForDemo || '123456';
@@ -75,7 +79,7 @@ export default function AuthPortalPage() {
         setStep('otp');
       } else {
         setLoading(false);
-        setErrorMessage(data.message || 'Invalid email or password credentials');
+        setErrorMessage(data.message || 'Invalid Username/Email/Phone or Password credentials');
       }
     } catch (err: any) {
       setLoading(false);
@@ -99,7 +103,7 @@ export default function AuthPortalPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, phone, company, accountType }),
+        body: JSON.stringify({ name, username, email, password, phone, company, accountType }),
       });
 
       const data = await res.json();
@@ -222,15 +226,15 @@ export default function AuthPortalPage() {
             {tab === 'login' && (
               <form onSubmit={handleLoginSubmit} className="space-y-4">
                 <div>
-                  <label className="text-xs font-bold theme-app-heading block mb-1.5">Email Address</label>
+                  <label className="text-xs font-bold theme-app-heading block mb-1.5">Username / Email / Mobile Number</label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
+                    <User className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
                     <input
-                      type="email"
+                      type="text"
                       required
-                      placeholder="name@company.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Username, Email or Mobile (e.g. amit_suraksha, name@mail.com, 9876543210)"
+                      value={identifier}
+                      onChange={(e) => setIdentifier(e.target.value)}
                       className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl pl-11 pr-4 py-3 text-xs theme-app-heading outline-none transition"
                     />
                   </div>
@@ -272,29 +276,46 @@ export default function AuthPortalPage() {
               </form>
             )}
 
-            {/* Form 2: REGISTER (LOGICAL FIELD SEQUENCE: Name -> Email -> Phone -> Company -> Password -> Confirm Password) */}
+            {/* Form 2: REGISTER */}
             {tab === 'register' && (
               <form onSubmit={handleRegisterSubmit} className="space-y-4">
                 
-                {/* 1. Full Name */}
-                <div>
-                  <label className="text-xs font-bold theme-app-heading block mb-1">1. Full Name</label>
-                  <div className="relative">
-                    <User className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
-                    <input
-                      type="text"
-                      required
-                      placeholder="Rajiv Malhotra"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl pl-11 pr-4 py-3 text-xs theme-app-heading outline-none transition"
-                    />
+                {/* 1. Full Name & Username */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs font-bold theme-app-heading block mb-1">1. Full Name *</label>
+                    <div className="relative">
+                      <User className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
+                      <input
+                        type="text"
+                        required
+                        placeholder="Rajiv Malhotra"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl pl-11 pr-4 py-3 text-xs theme-app-heading outline-none transition"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs font-bold theme-app-heading block mb-1">2. Username *</label>
+                    <div className="relative">
+                      <User className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
+                      <input
+                        type="text"
+                        required
+                        placeholder="rajiv_suraksha"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl pl-11 pr-4 py-3 text-xs theme-app-heading outline-none transition"
+                      />
+                    </div>
                   </div>
                 </div>
 
-                {/* 2. Email Address */}
+                {/* 3. Email Address */}
                 <div>
-                  <label className="text-xs font-bold theme-app-heading block mb-1">2. Email Address</label>
+                  <label className="text-xs font-bold theme-app-heading block mb-1">3. Email Address *</label>
                   <div className="relative">
                     <Mail className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
                     <input
@@ -308,14 +329,15 @@ export default function AuthPortalPage() {
                   </div>
                 </div>
 
-                {/* 3. Phone & Company */}
+                {/* 4. Phone & Company */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-xs font-bold theme-app-heading block mb-1">3. Phone Number</label>
+                    <label className="text-xs font-bold theme-app-heading block mb-1">4. Phone Number *</label>
                     <div className="relative">
                       <Phone className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
                       <input
                         type="tel"
+                        required
                         placeholder="+91 98765 43210"
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
@@ -325,7 +347,7 @@ export default function AuthPortalPage() {
                   </div>
 
                   <div>
-                    <label className="text-xs font-bold theme-app-heading block mb-1">4. Company / Entity</label>
+                    <label className="text-xs font-bold theme-app-heading block mb-1">5. Company / Entity</label>
                     <div className="relative">
                       <Building2 className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
                       <input
@@ -340,18 +362,17 @@ export default function AuthPortalPage() {
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold theme-app-heading block mb-1">5. Account Type *</label>
+                  <label className="text-xs font-bold theme-app-heading block mb-1">6. Account Type *</label>
                   <select value={accountType} onChange={(e) => setAccountType(e.target.value)} className="w-full theme-app-bg border border-slate-300 dark:border-slate-800 focus:border-[#F5C623] rounded-2xl px-4 py-3 text-xs theme-app-heading outline-none transition">
                     <option value="individual">Individual User</option>
                     <option value="client">Business / Client</option>
                     <option value="agency">Security Agency Partner</option>
                   </select>
-                  <p className="text-[10px] theme-app-body mt-1">This helps SURAKSHA route your account to the correct admin list.</p>
                 </div>
 
-                {/* 5. Password */}
+                {/* 7. Password */}
                 <div>
-                  <label className="text-xs font-bold theme-app-heading block mb-1">6. Password</label>
+                  <label className="text-xs font-bold theme-app-heading block mb-1">7. Password *</label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
                     <input
@@ -372,9 +393,9 @@ export default function AuthPortalPage() {
                   </div>
                 </div>
 
-                {/* 6. Confirm Password */}
+                {/* 8. Confirm Password */}
                 <div>
-                  <label className="text-xs font-bold theme-app-heading block mb-1">7. Confirm Password</label>
+                  <label className="text-xs font-bold theme-app-heading block mb-1">8. Confirm Password *</label>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
                     <input

@@ -7,26 +7,46 @@ const JWT_SECRET = process.env.JWT_SECRET || 'suraksha_super_secret_jwt_key_2026
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password, phone, company, accountType } = await req.json();
+    const { name, username, email, password, phone, company, accountType } = await req.json();
 
     if (!name || !email || !password) {
-      return NextResponse.json({ success: false, message: 'Name, email and password are required' }, { status: 400 });
+      return NextResponse.json({ success: false, message: 'Full name, email and password are required' }, { status: 400 });
     }
+
+    const cleanEmail = email.trim().toLowerCase();
+    const cleanUsername = username ? username.trim().toLowerCase() : cleanEmail.split('@')[0];
+    const cleanPhone = phone ? phone.trim() : '';
 
     await connectToDatabase();
 
-    // Check if user already exists
-    const existing = await User.findOne({ email });
+    // Check if user already exists with email, username or phone
+    const existing = await User.findOne({
+      $or: [
+        { email: cleanEmail },
+        { username: cleanUsername },
+        ...(cleanPhone ? [{ phone: cleanPhone }] : []),
+      ],
+    });
+
     if (existing) {
-      return NextResponse.json({ success: false, message: 'Account with this email already exists. Please sign in.' }, { status: 400 });
+      let field = 'email';
+      if (existing.email === cleanEmail) field = 'email address';
+      else if (existing.username === cleanUsername) field = 'username';
+      else if (cleanPhone && existing.phone === cleanPhone) field = 'phone number';
+
+      return NextResponse.json({
+        success: false,
+        message: `An account with this ${field} already exists. Please sign in or use another ${field}.`,
+      }, { status: 400 });
     }
 
     // Create new client user
     const newUser = await User.create({
       name,
-      email,
+      username: cleanUsername,
+      email: cleanEmail,
       password,
-      phone: phone || '',
+      phone: cleanPhone,
       company: company || 'Personal Client Account',
       accountType: ['individual', 'client', 'agency'].includes(accountType) ? accountType : (company?.trim() ? 'client' : 'individual'),
       role: 'user',
