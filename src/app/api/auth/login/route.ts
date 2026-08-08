@@ -19,8 +19,15 @@ export async function POST(req: Request) {
 
     const cleanIdLower = loginId.toLowerCase();
 
-    // Direct check for pre-configured Super Admin (accepts email, username 'chavdaamit', or phone '9876543210')
-    const isSuperAdminId = ['chavdaamit1011@gmail.com', 'chavdaamit', '9876543210', '+91 98765 43210'].includes(loginId) || cleanIdLower.includes('chavdaamit');
+    // Direct check for pre-configured Super Admin (accepts email, username 'chavdaamit' / 'chavda amit', or phone '9876543210')
+    const isSuperAdminId = [
+      'chavdaamit1011@gmail.com',
+      'chavdaamit',
+      'chavda amit',
+      'chavda_amit',
+      '9876543210',
+      '+91 98765 43210',
+    ].includes(loginId) || cleanIdLower.includes('chavdaamit') || cleanIdLower.includes('chavda amit');
 
     if (isSuperAdminId && password === 'Pass@1234') {
       let adminUser = await User.findOne({ email: 'chavdaamit1011@gmail.com' });

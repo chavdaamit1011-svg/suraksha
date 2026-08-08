@@ -58,7 +58,7 @@ interface SidebarGroup {
   items: SidebarItem[];
 }
 
-export default function AdminSidebar({
+export default function OpsSidebar({
   mobileOpen,
   onCloseMobile,
 }: {
@@ -78,80 +78,80 @@ export default function AdminSidebar({
   const groups: SidebarGroup[] = [
     {
       title: 'OVERVIEW',
-      items: [{ name: 'Dashboard', href: '/ops', icon: LayoutDashboard }],
+      items: [{ name: 'Dashboard', href: '/', icon: LayoutDashboard }],
     },
     {
       title: 'ORGANIZATION',
       items: [
-        { name: 'Organization', href: '/ops/organization', icon: Building },
-        { name: 'Branches', href: '/ops/branches', icon: Building2 },
-        { name: 'Team & Roles', href: '/ops/team', icon: Users },
+        { name: 'Organization', href: '/organization', icon: Building },
+        { name: 'Branches', href: '/branches', icon: Building2 },
+        { name: 'Team & Roles', href: '/team', icon: Users },
       ],
     },
     {
       title: 'WORKFORCE',
       items: [
-        { name: 'Guards', href: '/ops/guards', icon: Shield },
-        { name: 'Recruitment', href: '/ops/recruitment', icon: UserPlus },
-        { name: 'Training', href: '/ops/training', icon: GraduationCap },
-        { name: 'Assets', href: '/ops/assets', icon: Package },
+        { name: 'Guards', href: '/guards', icon: Shield },
+        { name: 'Recruitment', href: '/recruitment', icon: UserPlus },
+        { name: 'Training', href: '/training', icon: GraduationCap },
+        { name: 'Assets', href: '/assets', icon: Package },
       ],
     },
     {
       title: 'CLIENTS & SALES',
       items: [
-        { name: 'Clients', href: '/ops/clients', icon: Briefcase },
-        { name: 'Sites', href: '/ops/sites', icon: MapPin },
-        { name: 'Contracts', href: '/ops/contracts', icon: FileCheck },
-        { name: 'Sales & Leads', href: '/ops/sales-leads', icon: TrendingUp },
-        { name: 'B2B Tenders', href: '/ops/tenders', icon: FileText },
+        { name: 'Clients', href: '/clients', icon: Briefcase },
+        { name: 'Sites', href: '/sites', icon: MapPin },
+        { name: 'Contracts', href: '/contracts', icon: FileCheck },
+        { name: 'Sales & Leads', href: '/sales-leads', icon: TrendingUp },
+        { name: 'B2B Tenders', href: '/tenders', icon: FileText },
       ],
     },
     {
       title: 'OPERATIONS',
       items: [
-        { name: 'Scheduler', href: '/ops/scheduler', icon: Calendar },
-        { name: 'Attendance', href: '/ops/attendance', icon: Clock },
-        { name: 'Live Tracking', href: '/ops/live-tracking', icon: Radio },
-        { name: 'Command Center', href: '/ops/command-center', icon: Activity },
-        { name: 'Patrol', href: '/ops/patrol', icon: Compass },
-        { name: 'Night Alertness', href: '/ops/night-alertness', icon: Moon },
-        { name: 'Incidents', href: '/ops/incidents', icon: AlertTriangle },
-        { name: 'Visitors', href: '/ops/visitors', icon: UserCheck },
-        { name: 'Reports', href: '/ops/reports', icon: FileText },
+        { name: 'Scheduler', href: '/scheduler', icon: Calendar },
+        { name: 'Attendance', href: '/attendance', icon: Clock },
+        { name: 'Live Tracking', href: '/live-tracking', icon: Radio },
+        { name: 'Command Center', href: '/command-center', icon: Activity },
+        { name: 'Patrol', href: '/patrol', icon: Compass },
+        { name: 'Night Alertness', href: '/night-alertness', icon: Moon },
+        { name: 'Incidents', href: '/incidents', icon: AlertTriangle },
+        { name: 'Visitors', href: '/visitors', icon: UserCheck },
+        { name: 'Reports', href: '/reports', icon: FileText },
       ],
     },
     {
       title: 'FINANCE',
       items: [
-        { name: 'Payroll', href: '/ops/payroll', icon: DollarSign },
-        { name: 'Invoicing', href: '/ops/invoicing', icon: Receipt },
-        { name: 'Payments', href: '/ops/payments', icon: CreditCard },
-        { name: 'Expenses', href: '/ops/expenses', icon: PieChart },
+        { name: 'Payroll', href: '/payroll', icon: DollarSign },
+        { name: 'Invoicing', href: '/invoicing', icon: Receipt },
+        { name: 'Payments', href: '/payments', icon: CreditCard },
+        { name: 'Expenses', href: '/expenses', icon: PieChart },
       ],
     },
     {
       title: 'GOVERNANCE',
       items: [
-        { name: 'Compliance', href: '/ops/compliance', icon: ShieldCheck },
-        { name: 'Legal', href: '/ops/legal', icon: Scale },
-        { name: 'Documents', href: '/ops/documents', icon: Folder },
-        { name: 'Analytics', href: '/ops/analytics', icon: BarChart3 },
+        { name: 'Compliance', href: '/compliance', icon: ShieldCheck },
+        { name: 'Legal', href: '/legal', icon: Scale },
+        { name: 'Documents', href: '/documents', icon: Folder },
+        { name: 'Analytics', href: '/analytics', icon: BarChart3 },
       ],
     },
     {
       title: 'SYSTEM & EXTENSIONS',
       items: [
-        { name: 'Admin Users', href: '/ops/users', icon: Crown },
-        { name: 'Client Accounts', href: '/ops/client-users', icon: Share2 },
-        { name: 'Subscriptions', href: '/ops/subscriptions', icon: CreditCard },
-        { name: 'Website CMS', href: '/ops/cms', icon: Globe },
-        { name: 'GTM & Ads', href: '/ops/gtm', icon: Globe },
-        { name: 'Proposal Vault', href: '/ops/knowledge', icon: BookOpen },
-        { name: 'Testimonials', href: '/ops/reviews', icon: Star },
-        { name: 'Newsletter', href: '/ops/newsletter', icon: Mail },
-        { name: 'Support Desk', href: '/ops/support-desk', icon: HelpCircle },
-        { name: 'Settings', href: '/ops/settings', icon: Settings },
+        { name: 'Admin Users', href: '/users', icon: Crown },
+        { name: 'Client Accounts', href: '/client-users', icon: Share2 },
+        { name: 'Subscriptions', href: '/subscriptions', icon: CreditCard },
+        { name: 'Website CMS', href: '/cms', icon: Globe },
+        { name: 'GTM & Ads', href: '/gtm', icon: Globe },
+        { name: 'Proposal Vault', href: '/knowledge', icon: BookOpen },
+        { name: 'Testimonials', href: '/reviews', icon: Star },
+        { name: 'Newsletter', href: '/newsletter', icon: Mail },
+        { name: 'Support Desk', href: '/support-desk', icon: HelpCircle },
+        { name: 'Settings', href: '/settings', icon: Settings },
       ],
     },
   ];
@@ -160,14 +160,14 @@ export default function AdminSidebar({
     <aside className="w-[276px] bg-[#111316] border-r border-white/[0.08] flex flex-col h-full shrink-0 select-none font-sans text-xs">
       {/* Brand Header */}
       <div className="h-16 px-5 flex items-center justify-between border-b border-white/[0.08]">
-        <Link href="/ops" className="flex items-center gap-2.5">
+        <Link href="/" className="flex items-center gap-2.5">
           <Logo size="sm" showText={false} />
           <div>
             <span className="text-sm font-black tracking-wider text-white block leading-none">
               SURAKSHA
             </span>
             <span className="text-[9px] font-bold uppercase tracking-widest text-[#F5C623] block mt-0.5">
-              AGENCY OS
+              OPS CONSOLE
             </span>
           </div>
         </Link>
@@ -200,16 +200,13 @@ export default function AdminSidebar({
                 <div className="space-y-0.5">
                   {group.items.map((item) => {
                     const Icon = item.icon;
-                    const isOps = typeof window !== 'undefined' && (window.location.hostname.startsWith('ops.') || window.location.hostname.startsWith('ops-'));
-                    const targetHref = isOps ? (item.href.replace(/^\/(ops|admin)/, '') || '/') : item.href;
-                    const normPath = pathname.replace(/^\/(ops|admin)/, '') || '/';
-                    const normItem = item.href.replace(/^\/(ops|admin)/, '') || '/';
-                    const isActive = normPath === normItem;
+                    const normPath = pathname.replace(/^\/ops/, '') || '/';
+                    const isActive = normPath === item.href;
 
                     return (
                       <Link
                         key={item.href}
-                        href={targetHref}
+                        href={item.href}
                         onClick={onCloseMobile}
                         className={`flex items-center gap-3 px-3 py-2 rounded-lg font-medium transition duration-150 relative ${
                           isActive
@@ -237,14 +234,14 @@ export default function AdminSidebar({
       <div className="p-3 border-t border-white/[0.08] bg-[#0B0D0F]">
         <div className="p-3 rounded-lg bg-[#1E1F22] border border-white/[0.08] space-y-2">
           <div className="flex items-center justify-between">
-            <h5 className="font-bold text-white truncate text-xs">Suraksha Security Agency</h5>
+            <h5 className="font-bold text-white truncate text-xs">OPS Command Center</h5>
             <span className="text-[10px] font-bold text-[#F5C623] bg-[#F5C623]/10 border border-[#F5C623]/30 px-1.5 py-0.5 rounded">
-              Professional
+              Subdomain
             </span>
           </div>
           <div className="flex items-center gap-2 text-[11px] text-white/50">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Tenant online · synced</span>
+            <span>ops.surakshaguards.in</span>
           </div>
         </div>
       </div>

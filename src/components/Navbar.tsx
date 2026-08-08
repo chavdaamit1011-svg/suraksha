@@ -203,22 +203,20 @@ export default function Navbar() {
                         </div>
 
                         <Link
+                          href="/admin"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-2 px-3.5 py-2 text-xs bg-[#F5C623]/10 text-[#F5C623] font-bold hover:bg-[#F5C623]/20 transition"
+                        >
+                          <Shield className="w-3.5 h-3.5" /> Admin Console
+                        </Link>
+
+                        <Link
                           href="/profile"
                           onClick={() => setUserDropdownOpen(false)}
                           className="flex items-center gap-2 px-3.5 py-2 text-xs hover:bg-[#F5C623]/15 hover:text-[#F5C623] transition"
                         >
                           <User className="w-3.5 h-3.5 text-[#F5C623]" /> My Account
                         </Link>
-
-                        {['superadmin', 'admin'].includes(currentUser.role) && (
-                          <Link
-                            href="/admin"
-                            onClick={() => setUserDropdownOpen(false)}
-                            className="flex items-center gap-2 px-3.5 py-2 text-xs bg-[#F5C623]/10 text-[#F5C623] font-bold hover:bg-[#F5C623]/20 transition"
-                          >
-                            <Shield className="w-3.5 h-3.5" /> Admin Console
-                          </Link>
-                        )}
 
                         <button
                           suppressHydrationWarning
@@ -235,7 +233,7 @@ export default function Navbar() {
                         </div>
 
                         <Link
-                          href="/admin/login"
+                          href="/login"
                           onClick={() => setUserDropdownOpen(false)}
                           className="flex items-center gap-2.5 px-3.5 py-2.5 text-xs text-[#F5C623] font-bold hover:bg-[#F5C623]/15 transition"
                         >
@@ -243,7 +241,7 @@ export default function Navbar() {
                         </Link>
 
                         <Link
-                          href="/admin/login"
+                          href="/login"
                           onClick={() => setUserDropdownOpen(false)}
                           className="flex items-center gap-2.5 px-3.5 py-2.5 text-xs font-bold theme-app-heading hover:text-[#F5C623] hover:bg-[#F5C623]/15 transition"
                         >

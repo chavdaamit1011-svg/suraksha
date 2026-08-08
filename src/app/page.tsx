@@ -441,10 +441,10 @@ export default function HomePage() {
             </div>
 
             <Link
-              href="/admin/login"
+              href="/login"
               className="trust-yellow-btn px-6 py-3 rounded-full text-xs font-bold flex items-center gap-2 uppercase tracking-wider shadow-md shrink-0"
             >
-              Client login <ArrowUpRight className="w-4 h-4" />
+              Sign In Portal <ArrowUpRight className="w-4 h-4" />
             </Link>
           </div>
 

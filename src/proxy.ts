@@ -2,22 +2,32 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function proxy(req: NextRequest) {
-  const url = req.nextUrl.clone();
+  const pathname = req.nextUrl.pathname;
   const hostname = req.headers.get('host') || '';
 
-  // Detect if incoming request is on the `ops` subdomain (e.g. ops.suraksha.com or ops.localhost:4545)
+  // Detect if incoming request is on the `ops` subdomain (e.g. ops.surakshaguards.in or ops.localhost:4545)
   const isOpsSubdomain = hostname.startsWith('ops.') || hostname.startsWith('ops-');
 
   if (isOpsSubdomain) {
-    // Rewrite requests on ops subdomain directly to /admin routes seamlessly
+    // 1. Clean URL enforcement: If user typed '/ops/...' or '/admin/...' or '/login' directly in browser bar, redirect to clean path
+    if (pathname === '/login' || pathname.startsWith('/ops') || pathname.startsWith('/admin')) {
+      const cleanPath = pathname.replace(/^\/(ops|admin|login)/, '') || '/';
+      const redirectUrl = req.nextUrl.clone();
+      redirectUrl.pathname = cleanPath;
+      return NextResponse.redirect(redirectUrl, 308); // Permanent clean redirect
+    }
+
+    // 2. Seamless Internal Rewrite: Map root & subpaths on ops subdomain to /ops folder routes
+    // Example: ops.surakshaguards.in/ -> internal rewrite to /ops
+    // Example: ops.surakshaguards.in/branches -> internal rewrite to /ops/branches
     if (
-      !url.pathname.startsWith('/admin') &&
-      !url.pathname.startsWith('/api') &&
-      !url.pathname.startsWith('/_next') &&
-      !url.pathname.includes('.')
+      !pathname.startsWith('/api') &&
+      !pathname.startsWith('/_next') &&
+      !pathname.includes('.')
     ) {
-      url.pathname = `/admin${url.pathname === '/' ? '' : url.pathname}`;
-      return NextResponse.rewrite(url);
+      const rewriteUrl = req.nextUrl.clone();
+      rewriteUrl.pathname = `/ops${pathname === '/' ? '' : pathname}`;
+      return NextResponse.rewrite(rewriteUrl);
     }
   }
 

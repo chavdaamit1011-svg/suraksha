@@ -2,18 +2,20 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import WebsiteAdminLayoutShell from '@/components/WebsiteAdminLayoutShell';
+import { ShieldAlert, Loader2 } from 'lucide-react';
+import Logo from '@/components/Logo';
+import OpsLayoutShell from '@/components/OpsLayoutShell';
 import AdminChatbot from '@/components/AdminChatbot';
 import SurakshaLoader from '@/components/SurakshaLoader';
 import LoginPage from './login/page';
 
-export default function WebsiteAdminLayout({ children }: { children: React.ReactNode }) {
+export default function OpsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [authorized, setAuthorized] = useState(false);
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    // Ensure Website Admin uses dark class on html root
+    // Ensure OPS Console always uses dark class on html root
     document.documentElement.classList.remove('light');
     document.documentElement.classList.add('dark');
 
@@ -75,9 +77,9 @@ export default function WebsiteAdminLayout({ children }: { children: React.React
   }
 
   return (
-    <WebsiteAdminLayoutShell>
+    <OpsLayoutShell>
       {children}
       <AdminChatbot />
-    </WebsiteAdminLayoutShell>
+    </OpsLayoutShell>
   );
 }

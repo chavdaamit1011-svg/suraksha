@@ -3,435 +3,326 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-  ShieldCheck,
-  Radio,
-  UserPlus,
-  IndianRupee,
-  FileText,
-  Briefcase,
-  MapPin,
-  TrendingUp,
-  Activity,
-  ArrowUpRight,
+  MessageSquare,
+  Users,
   Shield,
-  Clock,
+  Star,
+  Mail,
+  Globe,
+  Sparkles,
+  ArrowUpRight,
   CheckCircle2,
-  FileCheck,
+  Clock,
+  Search,
+  Filter,
+  PlusCircle,
+  FileText,
   UserCheck,
-  AlertTriangle,
+  RefreshCw,
 } from 'lucide-react';
-import {
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from 'recharts';
 
-const deploymentData = [
-  { date: 'Jul 23', deployed: 172, required: 180 },
-  { date: 'Jul 24', deployed: 175, required: 180 },
-  { date: 'Jul 25', deployed: 178, required: 182 },
-  { date: 'Jul 26', deployed: 180, required: 182 },
-  { date: 'Jul 27', deployed: 181, required: 185 },
-  { date: 'Jul 28', deployed: 179, required: 185 },
-  { date: 'Jul 29', deployed: 182, required: 185 },
-  { date: 'Jul 30', deployed: 183, required: 186 },
-  { date: 'Jul 31', deployed: 185, required: 186 },
-  { date: 'Aug 01', deployed: 184, required: 186 },
-  { date: 'Aug 02', deployed: 186, required: 186 },
-  { date: 'Aug 03', deployed: 185, required: 186 },
-  { date: 'Aug 04', deployed: 186, required: 186 },
-  { date: 'Aug 05', deployed: 186, required: 186 },
-];
-
-export default function AdminDashboardPage() {
-  const [guardsCount, setGuardsCount] = useState(248);
-  const [tendersCount, setTendersCount] = useState(14);
+export default function WebsiteAdminDashboard() {
+  const [activeTab, setActiveTab] = useState<'leads' | 'users' | 'guards' | 'reviews'>('leads');
+  const [currentUser, setCurrentUser] = useState<any>(null);
 
   useEffect(() => {
-    fetch('/api/guards')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.guards && data.guards.length > 0) {
-          setGuardsCount(data.guards.length);
-        }
-      })
-      .catch(() => {});
+    const savedUserStr = localStorage.getItem('suraksha_user');
+    if (savedUserStr) {
+      try {
+        setCurrentUser(JSON.parse(savedUserStr));
+      } catch (e) {
+        console.error(e);
+      }
+    }
   }, []);
 
+  const leads = [
+    {
+      id: 'QRY-2026-104',
+      name: 'Rajesh Sharma',
+      email: 'rajesh.sharma@dlf.in',
+      phone: '+91 98101 22334',
+      service: 'Armed Escort & VIP Protection',
+      message: 'Requirement for 2 Armed Officers for Night Shift escalation.',
+      date: '10 Mins Ago',
+      status: 'Under Review',
+    },
+    {
+      id: 'QRY-2026-103',
+      name: 'Priya Malhotra',
+      email: 'priya@techpark.com',
+      phone: '+91 98711 55443',
+      service: 'Unarmed Security Guards',
+      message: 'Need 10 24x7 security personnel for corporate IT park deployment.',
+      date: '2 Hours Ago',
+      status: 'Contacted',
+    },
+    {
+      id: 'QRY-2026-102',
+      name: 'Anil Gupta',
+      email: 'anil@guptagroup.org',
+      phone: '+91 99100 88776',
+      service: 'Event Security Command',
+      message: 'Single-day event security cover for 500+ guests in New Delhi.',
+      date: 'Yesterday',
+      status: 'Closed / Won',
+    },
+  ];
+
+  const users = [
+    {
+      id: 'USR-8801',
+      name: 'Amit Chavda',
+      email: 'chavdaamit1011@gmail.com',
+      phone: '+91 98765 43210',
+      company: 'SURAKSHA Security Operations Corp',
+      role: 'Super Admin',
+      joined: 'Active User',
+    },
+    {
+      id: 'USR-8802',
+      name: 'Vikram Malhotra',
+      email: 'vikram@techpark.com',
+      phone: '+91 98112 33445',
+      company: 'DLF Cyber City',
+      role: 'Corporate Client',
+      joined: '3 Days Ago',
+    },
+  ];
+
+  const guards = [
+    {
+      id: 'GRD-101',
+      name: 'Vikram Singh',
+      rank: 'Senior Armed Officer',
+      site: 'TechPark Gate 1',
+      status: 'On Duty',
+      phone: '+91 98112 00112',
+    },
+    {
+      id: 'GRD-102',
+      name: 'Ramesh Kumar',
+      rank: 'Unarmed Guard',
+      site: 'DLF Cyber City Tower B',
+      status: 'On Duty',
+      phone: '+91 98112 00113',
+    },
+  ];
+
   return (
-    <div className="space-y-6 font-sans">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-white/[0.08]">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Welcome back, Amit
-          </h1>
-          <p className="text-xs text-white/55 mt-1">
-            Live operating picture for Suraksha Security Agency — workforce, recruitment, clients and billing.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="px-3 py-1.5 rounded-md bg-[#1E1F22] border border-white/[0.08] flex items-center gap-2 text-xs font-medium text-white/70">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            <span>Real-time</span>
-          </div>
-        </div>
-      </div>
+    <div className="space-y-6">
+      {/* Header Banner */}
+      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#F5C623]/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* FIRST KPI ROW: 4 equal statistic cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Total Guards (Yellow Emphasis) */}
-        <div className="trinetra-card trinetra-card-hover rounded-xl p-4 space-y-2 border-[#F5C623]/30 bg-[#F5C623]/[0.02]">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-white/55 font-medium">Total guards</span>
-            <div className="w-8 h-8 rounded-lg bg-[#F5C623]/10 border border-[#F5C623]/30 flex items-center justify-center text-[#F5C623]">
-              <ShieldCheck className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-2xl font-black text-white font-mono">{guardsCount}</div>
-          <div className="text-[11px] text-[#F5C623] font-medium flex items-center gap-1">
-            <span>231 active</span>
-          </div>
-        </div>
-
-        {/* Card 2: On duty now */}
-        <div className="trinetra-card trinetra-card-hover rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-white/55 font-medium">On duty now</span>
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-emerald-400">
-              <Radio className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-2xl font-black text-white font-mono">186</div>
-          <div className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span>live</span>
-          </div>
-        </div>
-
-        {/* Card 3: Recruitment pipeline */}
-        <div className="trinetra-card trinetra-card-hover rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-white/55 font-medium">Recruitment pipeline</span>
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-amber-300">
-              <UserPlus className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-2xl font-black text-white font-mono">34</div>
-          <div className="text-[11px] text-white/40 font-medium">
-            12 docs · 8 PV pending
-          </div>
-        </div>
-
-        {/* Card 4: Monthly billing */}
-        <div className="trinetra-card trinetra-card-hover rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-white/55 font-medium">Monthly billing</span>
-            <div className="w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.08] flex items-center justify-center text-[#F5C623]">
-              <IndianRupee className="w-4 h-4" />
-            </div>
-          </div>
-          <div className="text-2xl font-black text-white font-mono">₹18.42L</div>
-          <div className="text-[11px] text-white/40 font-medium">
-            14 contracts
-          </div>
-        </div>
-      </div>
-
-      {/* SECOND KPI ROW: 4 equal statistic cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Active guards */}
-        <div className="trinetra-card trinetra-card-hover rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-white/55 font-medium">Active guards</span>
-            <Shield className="w-4 h-4 text-white/40" />
-          </div>
-          <div className="text-2xl font-black text-white font-mono">231</div>
-          <div className="text-[11px] text-white/40">93.1% deployed</div>
-        </div>
-
-        {/* Card 2: Docs pending */}
-        <div className="trinetra-card trinetra-card-hover rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-white/55 font-medium">Docs pending</span>
-            <FileText className="w-4 h-4 text-amber-400" />
-          </div>
-          <div className="text-2xl font-black text-white font-mono">12</div>
-          <div className="text-[11px] text-amber-400">review required</div>
-        </div>
-
-        {/* Card 3: Clients */}
-        <div className="trinetra-card trinetra-card-hover rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-white/55 font-medium">Clients</span>
-            <Briefcase className="w-4 h-4 text-white/40" />
-          </div>
-          <div className="text-2xl font-black text-white font-mono">19</div>
-          <div className="text-[11px] text-white/40">32 active sites</div>
-        </div>
-
-        {/* Card 4: Active sites */}
-        <div className="trinetra-card trinetra-card-hover rounded-xl p-4 space-y-2">
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-white/55 font-medium">Active sites</span>
-            <MapPin className="w-4 h-4 text-emerald-400" />
-          </div>
-          <div className="text-2xl font-black text-white font-mono">32</div>
-          <div className="text-[11px] text-emerald-400">100% coverage</div>
-        </div>
-      </div>
-
-      {/* FIRST LARGE ROW: Deployment Trend (2/3) + Recruitment Funnel (1/3) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* LEFT: Deployment trend (8 cols) */}
-        <div className="lg:col-span-8 trinetra-card rounded-xl p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#F5C623]" />
-                <h3 className="font-bold text-white text-sm">Deployment trend</h3>
-              </div>
-              <p className="text-xs text-white/40 mt-0.5">
-                Guards deployed vs scheduled · last 14 days (live)
-              </p>
-            </div>
-            <div className="flex items-center gap-4 text-xs">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#F5C623]" />
-                <span className="text-white/60">Deployed</span>
-              </div>
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-white/40" />
-                <span className="text-white/60">Required</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Recharts Chart */}
-          <div className="h-[250px] w-full pt-2">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={deploymentData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="deployedGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#F5C623" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#F5C623" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
-                <XAxis dataKey="date" stroke="rgba(255,255,255,0.3)" fontSize={11} tickLine={false} />
-                <YAxis stroke="rgba(255,255,255,0.3)" fontSize={11} domain={[160, 190]} tickLine={false} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#1E1F22',
-                    borderColor: 'rgba(255,255,255,0.1)',
-                    borderRadius: '8px',
-                    color: '#fff',
-                    fontSize: '12px',
-                  }}
-                />
-                <Area type="monotone" dataKey="required" stroke="rgba(255,255,255,0.4)" strokeWidth={1.5} fill="none" />
-                <Area type="monotone" dataKey="deployed" stroke="#F5C623" strokeWidth={2.5} fillOpacity={1} fill="url(#deployedGrad)" />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* RIGHT: Recruitment Funnel (4 cols) */}
-        <div className="lg:col-span-4 trinetra-card rounded-xl p-5 space-y-4 flex flex-col justify-between">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-bold text-white text-sm">Recruitment funnel</h3>
-                <p className="text-xs text-white/40 mt-0.5">Pipeline health</p>
-              </div>
-              <Link
-                href="/admin/recruitment"
-                className="text-xs text-[#F5C623] hover:underline font-semibold flex items-center gap-1"
-              >
-                Open <ArrowUpRight className="w-3 h-3" />
-              </Link>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5C623]/15 border border-[#F5C623]/30 text-[#F5C623] text-xs font-bold uppercase tracking-wider mb-3">
+              <Globe className="w-3.5 h-3.5" /> SURAKSHA WEBSITE ADMIN CONTROL PANEL
             </div>
-
-            {/* Funnel Rows */}
-            <div className="space-y-3.5 mt-5">
-              {/* Row 1 */}
-              <div className="space-y-1 text-xs">
-                <div className="flex justify-between text-white/80 font-medium">
-                  <span>In pipeline</span>
-                  <span className="font-mono font-bold text-white">34</span>
-                </div>
-                <div className="w-full bg-white/[0.06] h-2 rounded-full overflow-hidden">
-                  <div className="bg-[#F5C623] h-full rounded-full" style={{ width: '45%' }} />
-                </div>
-              </div>
-
-              {/* Row 2 */}
-              <div className="space-y-1 text-xs">
-                <div className="flex justify-between text-white/80 font-medium">
-                  <span>Docs pending</span>
-                  <span className="font-mono font-bold text-amber-400">12</span>
-                </div>
-                <div className="w-full bg-white/[0.06] h-2 rounded-full overflow-hidden">
-                  <div className="bg-amber-400 h-full rounded-full" style={{ width: '25%' }} />
-                </div>
-              </div>
-
-              {/* Row 3 */}
-              <div className="space-y-1 text-xs">
-                <div className="flex justify-between text-white/80 font-medium">
-                  <span>Police verification</span>
-                  <span className="font-mono font-bold text-white/70">8</span>
-                </div>
-                <div className="w-full bg-white/[0.06] h-2 rounded-full overflow-hidden">
-                  <div className="bg-white/40 h-full rounded-full" style={{ width: '18%' }} />
-                </div>
-              </div>
-
-              {/* Row 4 */}
-              <div className="space-y-1 text-xs">
-                <div className="flex justify-between text-white/80 font-medium">
-                  <span>Active guards</span>
-                  <span className="font-mono font-bold text-emerald-400">231</span>
-                </div>
-                <div className="w-full bg-white/[0.06] h-2 rounded-full overflow-hidden">
-                  <div className="bg-emerald-400 h-full rounded-full" style={{ width: '93%' }} />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-3 border-t border-white/[0.06] text-[11px] text-white/40">
-            Total candidate intake this month: 52 candidates
-          </div>
-        </div>
-      </div>
-
-      {/* SECOND LARGE ROW: Recent Activity (2/3) + Billing Snapshot (1/3) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-        {/* LEFT: Recent Activity (8 cols) */}
-        <div className="lg:col-span-8 trinetra-card rounded-xl p-5 space-y-4">
-          <div>
-            <h3 className="font-bold text-white text-sm">Recent activity</h3>
-            <p className="text-xs text-white/40 mt-0.5">
-              Across guards, recruitment, clients & billing
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
+              Welcome back, {currentUser?.name || 'Admin'}
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-400 mt-1">
+              Public Website Management · Form Queries, User Accounts, Public Catalog & CMS
             </p>
           </div>
 
-          <div className="divide-y divide-white/[0.06]">
-            {/* Feed item 1 */}
-            <div className="py-3 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-full bg-[#F5C623]/10 text-[#F5C623] flex items-center justify-center shrink-0">
-                  <UserCheck className="w-3.5 h-3.5" />
-                </div>
-                <span className="text-white font-medium">
-                  Rohit Singh was onboarded as a guard
-                </span>
-              </div>
-              <span className="text-white/40 text-[11px] font-mono">8 min ago</span>
-            </div>
-
-            {/* Feed item 2 */}
-            <div className="py-3 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-full bg-white/[0.04] text-white/70 flex items-center justify-center shrink-0">
-                  <FileCheck className="w-3.5 h-3.5" />
-                </div>
-                <span className="text-white font-medium">
-                  Police verification uploaded for Imran Khan
-                </span>
-              </div>
-              <span className="text-white/40 text-[11px] font-mono">24 min ago</span>
-            </div>
-
-            {/* Feed item 3 */}
-            <div className="py-3 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-full bg-emerald-400/10 text-emerald-400 flex items-center justify-center shrink-0">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                </div>
-                <span className="text-white font-medium">
-                  DLF Cyber City contract renewed
-                </span>
-              </div>
-              <span className="text-white/40 text-[11px] font-mono">1 hr ago</span>
-            </div>
-
-            {/* Feed item 4 */}
-            <div className="py-3 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-full bg-amber-400/10 text-amber-400 flex items-center justify-center shrink-0">
-                  <IndianRupee className="w-3.5 h-3.5" />
-                </div>
-                <span className="text-white font-medium">
-                  Invoice INV-2025-048 generated
-                </span>
-              </div>
-              <span className="text-white/40 text-[11px] font-mono">2 hr ago</span>
-            </div>
-
-            {/* Feed item 5 */}
-            <div className="py-3 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-full bg-white/[0.04] text-white/70 flex items-center justify-center shrink-0">
-                  <UserPlus className="w-3.5 h-3.5" />
-                </div>
-                <span className="text-white font-medium">
-                  New candidate added from referral
-                </span>
-              </div>
-              <span className="text-white/40 text-[11px] font-mono">3 hr ago</span>
-            </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              href="/"
+              target="_blank"
+              className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold flex items-center gap-2 border border-slate-700 transition"
+            >
+              <Globe className="w-4 h-4 text-[#F5C623]" /> View Public Website <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
 
-        {/* RIGHT: Billing Snapshot (4 cols) */}
-        <div className="lg:col-span-4 trinetra-card rounded-xl p-5 space-y-4 flex flex-col justify-between">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-bold text-white text-sm">Billing snapshot</h3>
-                <p className="text-xs text-white/40 mt-0.5">Active contracts</p>
-              </div>
-              <Link
-                href="/admin/contracts"
-                className="text-xs text-[#F5C623] hover:underline font-semibold"
+        {/* Quick Stat Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-8 pt-6 border-t border-slate-800">
+          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1">
+            <div className="flex items-center justify-between text-slate-400">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Form Queries</span>
+              <MessageSquare className="w-4 h-4 text-[#F5C623]" />
+            </div>
+            <p className="text-2xl font-black text-white">3 Inquiries</p>
+            <p className="text-[10px] text-emerald-400 font-medium">Recorded in DB</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1">
+            <div className="flex items-center justify-between text-slate-400">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Registered Users</span>
+              <Users className="w-4 h-4 text-[#F5C623]" />
+            </div>
+            <p className="text-2xl font-black text-white">2 Accounts</p>
+            <p className="text-[10px] text-emerald-400 font-medium">Verified Accounts</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1">
+            <div className="flex items-center justify-between text-slate-400">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Public Guards</span>
+              <Shield className="w-4 h-4 text-[#F5C623]" />
+            </div>
+            <p className="text-2xl font-black text-white">2 Officers</p>
+            <p className="text-[10px] text-emerald-400 font-medium">On Active Duty</p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-slate-950/60 border border-slate-800 space-y-1">
+            <div className="flex items-center justify-between text-slate-400">
+              <span className="text-[11px] font-bold uppercase tracking-wider">Website Rating</span>
+              <Star className="w-4 h-4 text-[#F5C623]" />
+            </div>
+            <p className="text-2xl font-black text-white">4.9 / 5.0</p>
+            <p className="text-[10px] text-emerald-400 font-medium">Client Reviews</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Tabs Navigation */}
+      <div className="flex items-center gap-2 border-b border-slate-800 pb-3 overflow-x-auto">
+        <button
+          onClick={() => setActiveTab('leads')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+            activeTab === 'leads'
+              ? 'bg-[#F5C623] text-slate-950 shadow-md'
+              : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+          }`}
+        >
+          <MessageSquare className="w-4 h-4" /> Form Queries & Inquiries (3)
+        </button>
+
+        <button
+          onClick={() => setActiveTab('users')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+            activeTab === 'users'
+              ? 'bg-[#F5C623] text-slate-950 shadow-md'
+              : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+          }`}
+        >
+          <Users className="w-4 h-4" /> Website User Accounts
+        </button>
+
+        <button
+          onClick={() => setActiveTab('guards')}
+          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+            activeTab === 'guards'
+              ? 'bg-[#F5C623] text-slate-950 shadow-md'
+              : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+          }`}
+        >
+          <Shield className="w-4 h-4" /> Deployed Guard Roster
+        </button>
+      </div>
+
+      {/* Tab Content 1: Form Queries */}
+      {activeTab === 'leads' && (
+        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-white">Public Website Form Queries</h3>
+              <p className="text-xs text-slate-400">Inquiries submitted via contact and booking forms on surakshaguards.in</p>
+            </div>
+            <span className="text-xs text-slate-400 font-mono">Total: {leads.length}</span>
+          </div>
+
+          <div className="space-y-3">
+            {leads.map((lead) => (
+              <div
+                key={lead.id}
+                className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-3 hover:border-slate-700 transition"
               >
-                Contracts
-              </Link>
-            </div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-mono text-[#F5C623] font-bold bg-[#F5C623]/10 px-2 py-0.5 rounded border border-[#F5C623]/30">
+                      {lead.id}
+                    </span>
+                    <h4 className="text-sm font-bold text-white">{lead.name}</h4>
+                  </div>
+                  <span className="text-xs font-bold text-[#F5C623] bg-[#F5C623]/10 px-2.5 py-1 rounded-full border border-[#F5C623]/30 self-start sm:self-auto">
+                    {lead.status}
+                  </span>
+                </div>
 
-            {/* Inner Inset Card */}
-            <div className="p-4 rounded-lg bg-[#111316] border border-white/[0.08] space-y-2">
-              <span className="text-xs text-white/55 font-medium block">
-                Estimated monthly billing
-              </span>
-              <div className="text-3xl font-black text-white font-mono tracking-tight">
-                ₹18,42,000
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-slate-400">
+                  <p><strong className="text-slate-200">Email:</strong> {lead.email}</p>
+                  <p><strong className="text-slate-200">Phone:</strong> {lead.phone}</p>
+                  <p><strong className="text-slate-200">Service:</strong> {lead.service}</p>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-900 text-xs text-slate-300">
+                  "{lead.message}"
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                  <span>Received: {lead.date}</span>
+                  <button className="text-[#F5C623] hover:underline font-bold flex items-center gap-1">
+                    Follow Up Query <ArrowUpRight className="w-3 h-3" />
+                  </button>
+                </div>
               </div>
-              <div className="text-xs text-[#F5C623] font-medium pt-1">
-                14 active contracts · 32 sites
-              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tab Content 2: User Accounts */}
+      {activeTab === 'users' && (
+        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-white">Registered Website Accounts</h3>
+              <p className="text-xs text-slate-400">User accounts registered on surakshaguards.in</p>
             </div>
           </div>
 
-          <p className="text-[11px] text-white/32 border-t border-white/[0.06] pt-3">
-            Derived from active contract rates × guards contracted.
-          </p>
+          <div className="space-y-3">
+            {users.map((user) => (
+              <div key={user.id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-bold text-white">{user.name}</h4>
+                    <span className="text-[10px] font-bold text-[#F5C623] bg-[#F5C623]/10 px-2 py-0.5 rounded border border-[#F5C623]/30 uppercase">
+                      {user.role}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-400">{user.email} · {user.phone} · {user.company}</p>
+                </div>
+                <div className="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-3 py-1.5 rounded-xl border border-emerald-400/30 shrink-0">
+                  {user.joined}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Bottom Information Line */}
-      <div className="pt-2 text-center text-[11px] text-white/32 flex items-center justify-center gap-1.5">
-        <IndianRupee className="w-3 h-3 text-[#F5C623]" />
-        <span>
-          All figures are live from the API — KPIs, attendance trend, and activity feed reflect tenant data.
-        </span>
-      </div>
+      {/* Tab Content 3: Deployed Guard Roster */}
+      {activeTab === 'guards' && (
+        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-white">Deployed Guard Roster</h3>
+              <p className="text-xs text-slate-400">Active personnel displayed on public portal catalog</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {guards.map((guard) => (
+              <div key={guard.id} className="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-sm font-bold text-white">{guard.name}</h4>
+                  <span className="text-[10px] font-bold text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded border border-emerald-400/30">
+                    {guard.status}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-400">{guard.rank} · {guard.site}</p>
+                <p className="text-xs text-slate-500">{guard.phone}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
