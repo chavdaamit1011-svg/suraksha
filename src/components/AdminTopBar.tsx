@@ -16,6 +16,8 @@ import {
 
 import Logo from './Logo';
 
+import { clearAuthSession } from '@/lib/session';
+
 export default function AdminTopBar({
   onToggleMobileSidebar,
 }: {
@@ -25,9 +27,10 @@ export default function AdminTopBar({
   const [notificationsOpen, setNotificationsOpen] = useState(false);
 
   const handleSignOut = () => {
-    localStorage.removeItem('suraksha_token');
-    localStorage.removeItem('suraksha_user');
-    window.location.href = '/admin/login';
+    clearAuthSession();
+    const isOps = typeof window !== 'undefined' && (window.location.hostname.startsWith('ops.') || window.location.pathname.startsWith('/ops'));
+    const loginTarget = isOps ? '/ops/login' : '/admin/login';
+    window.location.replace(loginTarget);
   };
 
   return (

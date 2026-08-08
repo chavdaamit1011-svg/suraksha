@@ -8,6 +8,8 @@ export function proxy(req: NextRequest) {
   // Detect if incoming request is on the `ops` subdomain (e.g. ops.surakshaguards.in or ops.localhost:4545)
   const isOpsSubdomain = hostname.startsWith('ops.') || hostname.startsWith('ops-');
 
+  let res: NextResponse;
+
   if (isOpsSubdomain) {
     // 1. Clean URL enforcement: If user typed '/ops/...' or '/admin/...' or '/login' directly in browser bar, redirect to clean path
     if (pathname === '/login' || pathname.startsWith('/ops') || pathname.startsWith('/admin')) {
@@ -18,8 +20,6 @@ export function proxy(req: NextRequest) {
     }
 
     // 2. Seamless Internal Rewrite: Map root & subpaths on ops subdomain to /ops folder routes
-    // Example: ops.surakshaguards.in/ -> internal rewrite to /ops
-    // Example: ops.surakshaguards.in/branches -> internal rewrite to /ops/branches
     if (
       !pathname.startsWith('/api') &&
       !pathname.startsWith('/_next') &&
@@ -27,11 +27,28 @@ export function proxy(req: NextRequest) {
     ) {
       const rewriteUrl = req.nextUrl.clone();
       rewriteUrl.pathname = `/ops${pathname === '/' ? '' : pathname}`;
-      return NextResponse.rewrite(rewriteUrl);
+      res = NextResponse.rewrite(rewriteUrl);
+    } else {
+      res = NextResponse.next();
     }
+  } else {
+    res = NextResponse.next();
   }
 
-  return NextResponse.next();
+  // Anti-Caching Security Headers for all Admin, OPS, and Auth routes
+  if (
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/ops') ||
+    pathname.startsWith('/login') ||
+    isOpsSubdomain
+  ) {
+    res.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
+    res.headers.set('Pragma', 'no-cache');
+    res.headers.set('Expires', '0');
+    res.headers.set('Surrogate-Control', 'no-store');
+  }
+
+  return res;
 }
 
 export const config = {

@@ -20,6 +20,8 @@ import {
   Building2,
 } from 'lucide-react';
 
+import { saveAuthSession, checkAndEnforce7DaySession, getAuthSession, clearAuthSession } from '@/lib/session';
+
 export default function AuthPortalPage() {
   const [tab, setTab] = useState<'login' | 'register'>('login');
   const [step, setStep] = useState<'form' | 'otp'>('form');
@@ -42,7 +44,14 @@ export default function AuthPortalPage() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const [activeSessionUser, setActiveSessionUser] = useState<any>(null);
+
   useEffect(() => {
+    checkAndEnforce7DaySession();
+    const { token, user } = getAuthSession();
+    if (token && user) {
+      setActiveSessionUser(user);
+    }
     if (typeof window !== 'undefined' && window.location.search.includes('expired=1')) {
       setErrorMessage('Your 7-day security session has expired. Please sign in again.');
     }
@@ -64,9 +73,7 @@ export default function AuthPortalPage() {
       const data = await res.json();
 
       if (data.success) {
-        localStorage.setItem('suraksha_token', data.token);
-        localStorage.setItem('suraksha_user', JSON.stringify(data.user));
-        localStorage.setItem('suraksha_login_time', Date.now().toString());
+        saveAuthSession(data.token, data.user);
         setAuthenticatedUser(data.user);
 
         // Send OTP
@@ -196,6 +203,35 @@ export default function AuthPortalPage() {
         {errorMessage && (
           <div className="p-3.5 bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs font-semibold rounded-2xl flex items-center gap-2.5 animate-fadeIn">
             <AlertCircle className="w-4 h-4 shrink-0" /> {errorMessage}
+          </div>
+        )}
+
+        {activeSessionUser && (
+          <div className="p-4 bg-[#F5C623]/10 border border-[#F5C623]/30 text-xs rounded-2xl space-y-2 text-white">
+            <div className="flex items-center gap-2 font-bold text-[#F5C623]">
+              <CheckCircle2 className="w-4 h-4 text-[#F5C623]" /> Active Session: Signed in as {activeSessionUser.name || 'Admin'}
+            </div>
+            <p className="text-slate-400 text-[11px]">
+              You are currently logged in with a valid security session token.
+            </p>
+            <div className="flex flex-wrap items-center gap-2 pt-1">
+              <Link
+                href={typeof window !== 'undefined' && window.location.hostname.startsWith('ops.') ? '/' : '/admin'}
+                className="trust-yellow-btn px-4 py-2 rounded-xl text-xs font-bold"
+              >
+                Go to Command Panel
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  clearAuthSession();
+                  setActiveSessionUser(null);
+                }}
+                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-bold"
+              >
+                Sign Out & Switch Account
+              </button>
+            </div>
           </div>
         )}
 

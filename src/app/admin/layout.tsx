@@ -6,6 +6,7 @@ import WebsiteAdminLayoutShell from '@/components/WebsiteAdminLayoutShell';
 import AdminChatbot from '@/components/AdminChatbot';
 import SurakshaLoader from '@/components/SurakshaLoader';
 import LoginPage from './login/page';
+import { getAuthSession, checkAndEnforce7DaySession } from '@/lib/session';
 
 export default function WebsiteAdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -17,49 +18,47 @@ export default function WebsiteAdminLayout({ children }: { children: React.React
     document.documentElement.classList.remove('light');
     document.documentElement.classList.add('dark');
 
-    // Exclude login routes from Auth Guard check
-    if (['/ops/login', '/admin/login', '/login'].includes(pathname)) {
-      setAuthorized(true);
-      setChecking(false);
-      return;
-    }
-
-    const token = localStorage.getItem('suraksha_token');
-    const userStr = localStorage.getItem('suraksha_user');
-    const loginTimeStr = localStorage.getItem('suraksha_login_time');
-
-    if (!token || !userStr) {
-      setAuthorized(false);
-      setChecking(false);
-      return;
-    }
-
-    // Security Check: Enforce 7-Day Mandatory Re-Login Policy
-    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-    if (loginTimeStr) {
-      const sessionAge = Date.now() - parseInt(loginTimeStr, 10);
-      if (sessionAge > SEVEN_DAYS_MS) {
-        localStorage.removeItem('suraksha_token');
-        localStorage.removeItem('suraksha_user');
-        localStorage.removeItem('suraksha_login_time');
-        setAuthorized(false);
+    const verifySecurity = () => {
+      // Exclude login routes from Auth Guard check
+      if (['/ops/login', '/admin/login', '/login'].includes(pathname)) {
+        setAuthorized(true);
         setChecking(false);
         return;
       }
-    }
 
-    try {
-      const user = JSON.parse(userStr);
-      if (['superadmin', 'admin'].includes(user?.role)) {
-        setAuthorized(true);
-      } else {
+      // Security Check: Enforce 7-Day Mandatory Re-Login Policy (Checks Cookies & LocalStorage)
+      const isExpired = checkAndEnforce7DaySession();
+      const { token, user } = getAuthSession();
+
+      if (isExpired || !token || !user || !['superadmin', 'admin'].includes(user?.role)) {
         setAuthorized(false);
+        setChecking(false);
+        if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
+          window.location.replace('/admin/login');
+        }
+        return;
       }
-    } catch (e) {
-      setAuthorized(false);
-    } finally {
+
+      setAuthorized(true);
       setChecking(false);
-    }
+    };
+
+    verifySecurity();
+
+    // Prevent Back/Forward Navigation Security Bypass
+    const handlePageShow = (e: PageTransitionEvent) => {
+      if (e.persisted) {
+        verifySecurity();
+      }
+    };
+
+    window.addEventListener('pageshow', handlePageShow);
+    window.addEventListener('popstate', verifySecurity);
+
+    return () => {
+      window.removeEventListener('pageshow', handlePageShow);
+      window.removeEventListener('popstate', verifySecurity);
+    };
   }, [pathname]);
 
   if (['/ops/login', '/admin/login', '/login'].includes(pathname)) {

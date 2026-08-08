@@ -24,8 +24,56 @@ export default function SurakshaChatbot() {
     setMounted(true);
   }, []);
 
-  // Hide public chatbot on admin routes or until mounted on client
-  if (!mounted || pathname.startsWith('/admin')) {
+  const isOpsOrAdmin =
+    typeof window !== 'undefined' &&
+    (window.location.hostname.startsWith('ops.') ||
+      window.location.hostname.startsWith('ops-') ||
+      pathname.startsWith('/admin') ||
+      pathname.startsWith('/ops') ||
+      [
+        '/organization',
+        '/branches',
+        '/team',
+        '/guards',
+        '/recruitment',
+        '/training',
+        '/assets',
+        '/clients',
+        '/sites',
+        '/contracts',
+        '/sales-leads',
+        '/tenders',
+        '/scheduler',
+        '/attendance',
+        '/live-tracking',
+        '/command-center',
+        '/patrol',
+        '/night-alertness',
+        '/incidents',
+        '/visitors',
+        '/reports',
+        '/payroll',
+        '/invoicing',
+        '/payments',
+        '/expenses',
+        '/compliance',
+        '/legal',
+        '/documents',
+        '/analytics',
+        '/users',
+        '/client-users',
+        '/subscriptions',
+        '/cms',
+        '/gtm',
+        '/knowledge',
+        '/reviews',
+        '/newsletter',
+        '/support-desk',
+        '/settings',
+      ].some((route) => pathname === route || pathname.startsWith(route + '/')));
+
+  // Hide public chatbot on ops subdomain, admin routes, or until mounted on client
+  if (!mounted || isOpsOrAdmin) {
     return null;
   }
 
