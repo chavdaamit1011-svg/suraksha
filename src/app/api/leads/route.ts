@@ -36,3 +36,14 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const id = new URL(req.url).searchParams.get('id');
+    await connectToDatabase();
+    await Lead.findByIdAndDelete(id);
+    return NextResponse.json({ success: true, message: 'Lead deleted successfully' });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+  }
+}

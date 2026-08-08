@@ -1,14 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import AdminSidebar from '@/components/AdminSidebar';
-import { Settings, Save, CheckCircle2, Clock, ShieldAlert } from 'lucide-react';
+import { Settings, Shield, Lock, Bell, CheckCircle2, Save } from 'lucide-react';
 
-export default function SettingsPage() {
+export default function WebsiteAdminSettingsPage() {
   const [saved, setSaved] = useState(false);
-  const [sessionExpiryDays, setSessionExpiryDays] = useState(2);
-  const [autoDeactivateInactive, setAutoDeactivateInactive] = useState(true);
-  const [otpMandatory, setOtpMandatory] = useState(true);
+  const [settings, setSettings] = useState({
+    siteName: 'SURAKSHA Security Operations',
+    contactEmail: 'chavdaamit1011@gmail.com',
+    sessionPolicy: '7 Days Mandatory Re-Login Enabled',
+    smtpEnabled: true,
+  });
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -17,84 +19,64 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 font-sans">
-        <div className="flex items-center justify-between pb-4 border-b border-slate-900">
-          <div>
-            <h1 className="text-2xl font-black text-white flex items-center gap-2">
-              <Settings className="w-6 h-6 text-amber-400" /> Global System Settings & Session Expiry Rules
-            </h1>
-            <p className="text-xs text-slate-400">Configure 2-day session timeout rules, auto-deactivation toggles, and feature controls.</p>
+    <div className="space-y-6 font-sans text-white">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5C623]/15 border border-[#F5C623]/30 text-[#F5C623] text-xs font-bold uppercase tracking-wider mb-2">
+            <Settings className="w-3.5 h-3.5" /> WEBSITE ADMIN SETTINGS
           </div>
-          <button
-            onClick={handleSave}
-            className="px-6 py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl flex items-center gap-2 shadow-lg"
-          >
-            <Save className="w-4 h-4" /> Save System Settings
-          </button>
+          <h1 className="text-2xl font-extrabold text-white">Public Website Configuration</h1>
+          <p className="text-xs text-slate-400">
+            Configure website name, admin contact notification emails, and security policy rules
+          </p>
+        </div>
+      </div>
+
+      <form onSubmit={handleSave} className="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-5 text-xs">
+        <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 className="text-sm font-bold text-[#F5C623]">General Settings</h3>
+          {saved && (
+            <span className="text-xs font-bold text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-xl border border-emerald-400/30 flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5" /> Settings Saved
+            </span>
+          )}
         </div>
 
-        {saved && (
-          <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-2xl flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5" /> Settings Saved! Session limit policy enforced.
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block font-bold text-slate-300 mb-1">Website Name</label>
+            <input
+              value={settings.siteName}
+              onChange={(e) => setSettings({ ...settings, siteName: e.target.value })}
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-[#F5C623]"
+            />
           </div>
-        )}
-
-        <form onSubmit={handleSave} className="space-y-6 text-xs max-w-3xl">
-          {/* Session Limit Setting */}
-          <div className="bg-slate-900 border border-amber-500/30 p-6 rounded-3xl space-y-4">
-            <h3 className="text-sm font-bold text-amber-400 flex items-center gap-2">
-              <Clock className="w-4 h-4" /> Session Timeout & Inactive User Policy
-            </h3>
-            <p className="text-slate-400 leading-relaxed">
-              Enforce auto-logout and deactivate user sessions if inactive for more than 2 days.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="font-semibold text-slate-300">Session Timeout (Days)</label>
-                <select
-                  value={sessionExpiryDays}
-                  onChange={(e) => setSessionExpiryDays(parseInt(e.target.value))}
-                  className="w-full mt-1.5 bg-slate-950 border border-slate-800 rounded-xl p-3 text-amber-400 font-bold outline-none"
-                >
-                  <option value={2}>2 Days (Default Strict Policy)</option>
-                  <option value={5}>5 Days</option>
-                  <option value={7}>7 Days</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="font-semibold text-slate-300">Action on Expiry</label>
-                <select
-                  value={autoDeactivateInactive ? 'deactivate' : 'logout'}
-                  onChange={(e) => setAutoDeactivateInactive(e.target.value === 'deactivate')}
-                  className="w-full mt-1.5 bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-100 outline-none"
-                >
-                  <option value="deactivate">Auto-Deactivate User & Require Admin Re-approval</option>
-                  <option value="logout">Force Logout Session Only</option>
-                </select>
-              </div>
-            </div>
+          <div>
+            <label className="block font-bold text-slate-300 mb-1">Admin Notification Email</label>
+            <input
+              value={settings.contactEmail}
+              onChange={(e) => setSettings({ ...settings, contactEmail: e.target.value })}
+              className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-white outline-none focus:border-[#F5C623]"
+            />
           </div>
+        </div>
 
-          {/* OTP Mandatory */}
-          <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <ShieldAlert className="w-4 h-4 text-amber-400" /> Mandatory Nodemailer OTP for Admin Login
-                </h3>
-                <p className="text-slate-400 mt-0.5">Dispatches 6-digit OTP code to email during login.</p>
-              </div>
-              <input
-                type="checkbox"
-                checked={otpMandatory}
-                onChange={(e) => setOtpMandatory(e.target.checked)}
-                className="w-5 h-5 accent-amber-500 cursor-pointer"
-              />
-            </div>
-          </div>
-        </form>
+        <div>
+          <label className="block font-bold text-slate-300 mb-1">Security Session Policy</label>
+          <input
+            readOnly
+            value={settings.sessionPolicy}
+            className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-400 outline-none cursor-not-allowed"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="trust-yellow-btn px-6 py-3 rounded-xl text-xs font-bold flex items-center gap-2 uppercase tracking-wider shadow-lg"
+        >
+          <Save className="w-4 h-4" /> Save Settings
+        </button>
+      </form>
     </div>
   );
 }
