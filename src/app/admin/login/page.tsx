@@ -45,16 +45,41 @@ export default function AuthPortalPage() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const [activeSessionUser, setActiveSessionUser] = useState<any>(null);
+  const [mounted, setMounted] = useState(false);
+  const [isOps, setIsOps] = useState(false);
 
   useEffect(() => {
-    checkAndEnforce7DaySession();
-    const { token, user } = getAuthSession();
-    if (token && user) {
-      setActiveSessionUser(user);
-    }
+    setMounted(true);
+    const isOpsHost = typeof window !== 'undefined' &&
+      (window.location.hostname.startsWith('ops.') || window.location.hostname.startsWith('ops-'));
+    setIsOps(isOpsHost);
+
     if (typeof window !== 'undefined' && window.location.search.includes('expired=1')) {
       setErrorMessage('Your 7-day security session has expired. Please sign in again.');
     }
+
+    const checkSession = () => {
+      checkAndEnforce7DaySession();
+      const { token, user } = getAuthSession();
+      if (token && user) {
+        // Already logged in — redirect away from login page entirely
+        const dest = isOpsHost ? '/ops' : '/admin';
+        window.location.replace(dest);
+        return;
+      }
+      // Reset OTP step if BFCache restores this page after logout
+      setStep('form');
+      setActiveSessionUser(null);
+    };
+
+    checkSession();
+
+    // Handle BFCache: when user hits back button to arrive here
+    const handlePageShow = () => {
+      checkSession();
+    };
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
   }, []);
 
   // Handle Login Submit
@@ -169,8 +194,9 @@ export default function AuthPortalPage() {
 
       if (data.success) {
         const user = authenticatedUser || JSON.parse(localStorage.getItem('suraksha_user') || '{}');
-        const isOps = typeof window !== 'undefined' && (window.location.hostname.startsWith('ops.') || window.location.hostname.startsWith('ops-'));
-        window.location.href = isOps ? '/' : '/admin';
+        const isOpsHost = typeof window !== 'undefined' && (window.location.hostname.startsWith('ops.') || window.location.hostname.startsWith('ops-'));
+        // Use replace() so login page is removed from history — back button goes to website, not OTP page
+        window.location.replace(isOpsHost ? '/ops' : '/admin');
       } else {
         setErrorMessage(data.message || 'Invalid OTP security passkey');
       }
@@ -238,7 +264,7 @@ export default function AuthPortalPage() {
         {step === 'form' ? (
           <>
             {/* Tab Selector: Sign In vs Create Account (Hidden on OPS Console) */}
-            {typeof window !== 'undefined' && !(window.location.hostname.startsWith('ops.') || window.location.hostname.startsWith('ops-')) && (
+            {mounted && !isOps && (
               <div className="flex bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800">
                 <button
                   type="button"

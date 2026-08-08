@@ -19,18 +19,22 @@ export default function WebsiteAdminLayout({ children }: { children: React.React
     document.documentElement.classList.add('dark');
 
     const verifySecurity = () => {
-      // Exclude login routes from Auth Guard check
+      const isExpired = checkAndEnforce7DaySession();
+      const { token, user } = getAuthSession();
+      const isValidSession = !isExpired && token && user && ['superadmin', 'admin'].includes(user?.role);
+
+      // Exclude login routes from Auth Guard check, BUT redirect away if already logged in
       if (['/ops/login', '/admin/login', '/login'].includes(pathname)) {
+        if (isValidSession && typeof window !== 'undefined') {
+          window.location.replace('/admin');
+          return;
+        }
         setAuthorized(true);
         setChecking(false);
         return;
       }
 
-      // Security Check: Enforce 7-Day Mandatory Re-Login Policy (Checks Cookies & LocalStorage)
-      const isExpired = checkAndEnforce7DaySession();
-      const { token, user } = getAuthSession();
-
-      if (isExpired || !token || !user || !['superadmin', 'admin'].includes(user?.role)) {
+      if (!isValidSession) {
         setAuthorized(false);
         setChecking(false);
         if (typeof window !== 'undefined' && !window.location.pathname.includes('/login')) {
@@ -46,10 +50,8 @@ export default function WebsiteAdminLayout({ children }: { children: React.React
     verifySecurity();
 
     // Prevent Back/Forward Navigation Security Bypass
-    const handlePageShow = (e: PageTransitionEvent) => {
-      if (e.persisted) {
-        verifySecurity();
-      }
+    const handlePageShow = () => {
+      verifySecurity();
     };
 
     window.addEventListener('pageshow', handlePageShow);

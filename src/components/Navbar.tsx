@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 import { Bell, User, LogOut, Menu, X, Shield, ChevronDown, Sun, Moon, LogIn, UserPlus, PhoneCall, Sparkles, UserCheck } from 'lucide-react';
 
-import { checkAndEnforce7DaySession } from '@/lib/session';
+import { checkAndEnforce7DaySession, clearAuthSession } from '@/lib/session';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -40,21 +40,32 @@ export default function Navbar() {
     applyTheme(theme);
 
     // Global 7-Day Session Security Check (Enforces Re-Login after 7 days for ALL users & admins)
-    const isExpired = checkAndEnforce7DaySession();
-    if (isExpired) {
-      setCurrentUser(null);
-    } else {
-      const savedUser = localStorage.getItem('suraksha_user');
-      if (savedUser) {
-        try {
-          setCurrentUser(JSON.parse(savedUser));
-        } catch (e) {
-          console.error(e);
+    const checkAuth = () => {
+      const isExpired = checkAndEnforce7DaySession();
+      if (isExpired) {
+        setCurrentUser(null);
+      } else {
+        const savedUser = localStorage.getItem('suraksha_user');
+        if (savedUser) {
+          try {
+            setCurrentUser(JSON.parse(savedUser));
+          } catch (e) {
+            console.error(e);
+            setCurrentUser(null);
+          }
+        } else {
+          setCurrentUser(null);
         }
       }
-    }
+    };
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    checkAuth();
+    window.addEventListener('pageshow', checkAuth);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('pageshow', checkAuth);
+    };
   }, [pathname, theme]);
 
   const applyTheme = (t: 'dark' | 'light') => {
@@ -76,8 +87,7 @@ export default function Navbar() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('suraksha_token');
-    localStorage.removeItem('suraksha_user');
+    clearAuthSession();
     setCurrentUser(null);
     setUserDropdownOpen(false);
     window.location.href = '/';

@@ -22,6 +22,7 @@ export default function WebsiteAdminReviewsPage() {
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
   const [newReview, setNewReview] = useState({
     name: '',
     company: '',
@@ -51,25 +52,45 @@ export default function WebsiteAdminReviewsPage() {
     }
   };
 
-  const handleCreateReview = async (e: React.FormEvent) => {
+  const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch('/api/testimonials', {
-        method: 'POST',
+      const isEditing = !!editingReviewId;
+      const url = '/api/testimonials';
+      const method = isEditing ? 'PUT' : 'POST';
+      const body = isEditing ? { ...newReview, id: editingReviewId } : newReview;
+
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newReview),
+        body: JSON.stringify(body),
       });
       const data = await res.json();
       if (data.success) {
         setShowModal(false);
+        setEditingReviewId(null);
         fetchReviews();
         setNewReview({ name: '', company: '', role: 'Corporate Client', email: '', phone: '', rating: 5, content: '' });
       } else {
-        alert(data.message || 'Error adding testimonial');
+        alert(data.message || 'Error saving testimonial');
       }
     } catch (err) {
-      alert('Error adding testimonial');
+      alert('Error saving testimonial');
     }
+  };
+
+  const openEditModal = (review: any) => {
+    setEditingReviewId(review._id);
+    setNewReview({
+      name: review.name,
+      company: review.company,
+      role: review.role,
+      email: review.email,
+      phone: review.phone,
+      rating: review.rating,
+      content: review.content,
+    });
+    setShowModal(true);
   };
 
   const handleToggleStatus = async (id: string, currentStatus: string) => {
@@ -214,6 +235,14 @@ export default function WebsiteAdminReviewsPage() {
                       </button>
 
                       <button
+                        onClick={() => openEditModal(r)}
+                        className="p-1.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition"
+                        title="Edit Testimonial"
+                      >
+                        <MessageSquare className="w-4 h-4" />
+                      </button>
+
+                      <button
                         onClick={() => handleDeleteReview(r._id)}
                         className="p-1.5 rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition"
                         title="Delete Testimonial"
@@ -229,20 +258,27 @@ export default function WebsiteAdminReviewsPage() {
         )}
       </div>
 
-      {/* Add Testimonial Modal */}
+      {/* Add/Edit Testimonial Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 w-full max-w-lg space-y-5 text-white">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <Plus className="w-5 h-5 text-[#F5C623]" /> Add Client Testimonial
+                <Plus className="w-5 h-5 text-[#F5C623]" /> {editingReviewId ? 'Edit Client Testimonial' : 'Add Client Testimonial'}
               </h3>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-white text-xs font-bold">
+              <button
+                onClick={() => {
+                  setShowModal(false);
+                  setEditingReviewId(null);
+                  setNewReview({ name: '', company: '', role: 'Corporate Client', email: '', phone: '', rating: 5, content: '' });
+                }}
+                className="text-slate-400 hover:text-white text-xs font-bold"
+              >
                 ✕ Close
               </button>
             </div>
 
-            <form onSubmit={handleCreateReview} className="space-y-4 text-xs">
+            <form onSubmit={handleSubmitReview} className="space-y-4 text-xs">
               <div>
                 <label className="block font-bold text-slate-300 mb-1">Client Full Name</label>
                 <input

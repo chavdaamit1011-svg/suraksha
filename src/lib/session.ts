@@ -33,7 +33,7 @@ export function getCookie(name: string): string | null {
 
 export function eraseCookie(name: string) {
   if (typeof document === 'undefined') return;
-  document.cookie = `${name}=; Max-Age=-99999999; path=/; SameSite=Lax`;
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax`;
 }
 
 // --- Save Auth Session (7-Day Cookies + localStorage) ---

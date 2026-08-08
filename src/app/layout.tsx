@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
-import SurakshaChatbot from '@/components/SurakshaChatbot';
+import GlobalChatbotWrapper from '@/components/GlobalChatbotWrapper';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -48,7 +48,7 @@ export default function RootLayout({
       <body suppressHydrationWarning className={`${inter.variable} font-sans theme-app-bg theme-app-heading antialiased selection:bg-amber-500 selection:text-slate-950 min-h-screen flex flex-col`}>
         {children}
         {/* Global AI Security Assistant Chatbot */}
-        <SurakshaChatbot />
+        <GlobalChatbotWrapper />
       </body>
     </html>
   );

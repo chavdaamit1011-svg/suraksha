@@ -41,10 +41,16 @@ export default function AuthPortalPage() {
   const [demoOtp, setDemoOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [mounted, setMounted] = useState(false);
+  const [isOps, setIsOps] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.location.search.includes('expired=1')) {
-      setErrorMessage('Your 7-day security session has expired. Please sign in again.');
+    setMounted(true);
+    if (typeof window !== 'undefined') {
+      setIsOps(window.location.hostname.startsWith('ops.') || window.location.hostname.startsWith('ops-'));
+      if (window.location.search.includes('expired=1')) {
+        setErrorMessage('Your 7-day security session has expired. Please sign in again.');
+      }
     }
   }, []);
 
@@ -202,7 +208,7 @@ export default function AuthPortalPage() {
         {step === 'form' ? (
           <>
             {/* Tab Selector: Sign In vs Create Account (Hidden on OPS Console) */}
-            {typeof window !== 'undefined' && !(window.location.hostname.startsWith('ops.') || window.location.hostname.startsWith('ops-')) && (
+            {mounted && !isOps && (
               <div className="flex bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
