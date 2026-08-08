@@ -26,7 +26,8 @@ export default function OpsLayout({ children }: { children: React.ReactNode }) {
       // Exclude login routes from Auth Guard check, BUT redirect away if already logged in
       if (['/ops/login', '/admin/login', '/login'].includes(pathname)) {
         if (isValidSession && typeof window !== 'undefined') {
-          window.location.replace('/ops');
+          // On ops subdomain, '/' maps to the ops dashboard — NOT '/ops' (that would be /ops/ops)
+          window.location.replace('/');
           return;
         }
         setAuthorized(true);

@@ -20,6 +20,8 @@ import {
   Building2,
 } from 'lucide-react';
 
+import { saveAuthSession, checkAndEnforce7DaySession, getAuthSession } from '@/lib/session';
+
 export default function AuthPortalPage() {
   const [tab, setTab] = useState<'login' | 'register'>('login');
   const [step, setStep] = useState<'form' | 'otp'>('form');
@@ -46,12 +48,27 @@ export default function AuthPortalPage() {
 
   useEffect(() => {
     setMounted(true);
-    if (typeof window !== 'undefined') {
-      setIsOps(window.location.hostname.startsWith('ops.') || window.location.hostname.startsWith('ops-'));
-      if (window.location.search.includes('expired=1')) {
-        setErrorMessage('Your 7-day security session has expired. Please sign in again.');
-      }
+    if (typeof window !== 'undefined' && window.location.search.includes('expired=1')) {
+      setErrorMessage('Your 7-day security session has expired. Please sign in again.');
     }
+
+    const checkSession = () => {
+      checkAndEnforce7DaySession();
+      const { token, user } = getAuthSession();
+      if (token && user) {
+        // Already logged in — redirect to ops dashboard
+        window.location.replace('/');
+        return;
+      }
+      // Reset to clean login form (handles BFCache restoring OTP step)
+      setStep('form');
+    };
+
+    checkSession();
+
+    const handlePageShow = () => checkSession();
+    window.addEventListener('pageshow', handlePageShow);
+    return () => window.removeEventListener('pageshow', handlePageShow);
   }, []);
 
   // Handle Login Submit
@@ -70,9 +87,7 @@ export default function AuthPortalPage() {
       const data = await res.json();
 
       if (data.success) {
-        localStorage.setItem('suraksha_token', data.token);
-        localStorage.setItem('suraksha_user', JSON.stringify(data.user));
-        localStorage.setItem('suraksha_login_time', Date.now().toString());
+        saveAuthSession(data.token, data.user);
         setAuthenticatedUser(data.user);
 
         // Send OTP
@@ -167,9 +182,9 @@ export default function AuthPortalPage() {
       setLoading(false);
 
       if (data.success) {
-        const user = authenticatedUser || JSON.parse(localStorage.getItem('suraksha_user') || '{}');
-        const isOps = typeof window !== 'undefined' && (window.location.hostname.startsWith('ops.') || window.location.hostname.startsWith('ops-'));
-        window.location.href = isOps ? '/' : '/admin';
+        // Use replace() so /ops/login is removed from browser history
+        // On ops subdomain, '/' is the dashboard (not '/ops' which would be /ops/ops)
+        window.location.replace('/');
       } else {
         setErrorMessage(data.message || 'Invalid OTP security passkey');
       }
