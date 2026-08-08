@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     const token = jwt.sign(
       { id: newUser._id, email: newUser.email, role: newUser.role, name: newUser.name },
       JWT_SECRET,
-      { expiresIn: '2d' }
+      { expiresIn: '7d' }
     );
 
     return NextResponse.json({
@@ -75,11 +75,15 @@ export async function POST(req: Request) {
       user: {
         id: newUser._id,
         name: newUser.name,
+        username: newUser.username,
         email: newUser.email,
+        phone: newUser.phone,
         role: newUser.role,
         company: newUser.company,
         plan: newUser.plan,
         deviceSessions: newUser.deviceSessions,
+        loginTimestamp: Date.now(),
+        sessionExpiresInDays: 7,
       },
     });
   } catch (error: any) {

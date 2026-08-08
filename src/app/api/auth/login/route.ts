@@ -41,7 +41,7 @@ export async function POST(req: Request) {
       const token = jwt.sign(
         { id: adminUser._id, email: adminUser.email, role: adminUser.role, name: adminUser.name },
         JWT_SECRET,
-        { expiresIn: '2d' }
+        { expiresIn: '7d' }
       );
 
       return NextResponse.json({
@@ -60,6 +60,8 @@ export async function POST(req: Request) {
           plan: adminUser.plan,
           paymentMethod: adminUser.paymentMethod,
           deviceSessions: adminUser.deviceSessions,
+          loginTimestamp: Date.now(),
+          sessionExpiresInDays: 7,
         },
       });
     }
@@ -79,7 +81,7 @@ export async function POST(req: Request) {
     }
 
     if (!user.isActive) {
-      return NextResponse.json({ success: false, message: 'Account is inactive due to 2-day session policy. Contact Admin.' }, { status: 403 });
+      return NextResponse.json({ success: false, message: 'Account is inactive due to security policy. Contact Admin.' }, { status: 403 });
     }
 
     // Update last login
@@ -89,7 +91,7 @@ export async function POST(req: Request) {
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role, name: user.name },
       JWT_SECRET,
-      { expiresIn: '2d' }
+      { expiresIn: '7d' }
     );
 
     return NextResponse.json({
@@ -99,12 +101,16 @@ export async function POST(req: Request) {
         id: user._id,
         name: user.name,
         email: user.email,
+        username: user.username,
+        phone: user.phone,
         role: user.role,
         designation: user.designation,
         company: user.company,
         plan: user.plan,
         paymentMethod: user.paymentMethod,
         deviceSessions: user.deviceSessions,
+        loginTimestamp: Date.now(),
+        sessionExpiresInDays: 7,
       },
     });
   } catch (error: any) {

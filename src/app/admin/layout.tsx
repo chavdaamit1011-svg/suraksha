@@ -27,12 +27,28 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const token = localStorage.getItem('suraksha_token');
     const userStr = localStorage.getItem('suraksha_user');
+    const loginTimeStr = localStorage.getItem('suraksha_login_time');
 
     if (!token || !userStr) {
       setAuthorized(false);
       setChecking(false);
       window.location.href = '/admin/login';
       return;
+    }
+
+    // Security Check: Enforce 7-Day Mandatory Re-Login Policy
+    const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+    if (loginTimeStr) {
+      const sessionAge = Date.now() - parseInt(loginTimeStr, 10);
+      if (sessionAge > SEVEN_DAYS_MS) {
+        localStorage.removeItem('suraksha_token');
+        localStorage.removeItem('suraksha_user');
+        localStorage.removeItem('suraksha_login_time');
+        setAuthorized(false);
+        setChecking(false);
+        window.location.href = '/admin/login?expired=1';
+        return;
+      }
     }
 
     try {

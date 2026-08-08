@@ -5,6 +5,8 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { User, CreditCard, History, Smartphone, Building, Edit, Save, Shield, CheckCircle2, AlertCircle } from 'lucide-react';
 
+import { checkAndEnforce7DaySession } from '@/lib/session';
+
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<'profile' | 'payment' | 'history' | 'devices' | 'branch'>('profile');
   const [isEditing, setIsEditing] = useState(false);
@@ -33,8 +35,14 @@ export default function ProfilePage() {
     { id: 'ORD-9902', service: '2-Year Guard Tender Deployment', site: 'Global Logistics Hub', date: '01 Jan 2026', amount: '₹ 1.48 Crore / Yr', status: 'Active Tender' },
   ]);
 
-  // AUTH GUARD: Redirect to login if user is not authenticated
+  // AUTH GUARD: Redirect to login if user is not authenticated or 7-day session expired
   useEffect(() => {
+    const isExpired = checkAndEnforce7DaySession();
+    if (isExpired) {
+      window.location.href = '/admin/login?expired=1';
+      return;
+    }
+
     const token = localStorage.getItem('suraksha_token');
     const savedUser = localStorage.getItem('suraksha_user');
 

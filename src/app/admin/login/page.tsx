@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import {
@@ -42,6 +42,12 @@ export default function AuthPortalPage() {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.search.includes('expired=1')) {
+      setErrorMessage('Your 7-day security session has expired. Please sign in again.');
+    }
+  }, []);
+
   // Handle Login Submit
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +66,7 @@ export default function AuthPortalPage() {
       if (data.success) {
         localStorage.setItem('suraksha_token', data.token);
         localStorage.setItem('suraksha_user', JSON.stringify(data.user));
+        localStorage.setItem('suraksha_login_time', Date.now().toString());
         setAuthenticatedUser(data.user);
 
         // Send OTP
@@ -111,6 +118,7 @@ export default function AuthPortalPage() {
       if (data.success) {
         localStorage.setItem('suraksha_token', data.token);
         localStorage.setItem('suraksha_user', JSON.stringify(data.user));
+        localStorage.setItem('suraksha_login_time', Date.now().toString());
         setAuthenticatedUser(data.user);
 
         // Send OTP

@@ -6,6 +6,8 @@ import { usePathname } from 'next/navigation';
 import Logo from './Logo';
 import { Bell, User, LogOut, Menu, X, Shield, ChevronDown, Sun, Moon, LogIn, UserPlus, PhoneCall, Sparkles, UserCheck } from 'lucide-react';
 
+import { checkAndEnforce7DaySession } from '@/lib/session';
+
 export default function Navbar() {
   const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -37,13 +39,18 @@ export default function Navbar() {
     // Sync theme class to document element
     applyTheme(theme);
 
-    // Read current user session
-    const savedUser = localStorage.getItem('suraksha_user');
-    if (savedUser) {
-      try {
-        setCurrentUser(JSON.parse(savedUser));
-      } catch (e) {
-        console.error(e);
+    // Global 7-Day Session Security Check (Enforces Re-Login after 7 days for ALL users & admins)
+    const isExpired = checkAndEnforce7DaySession();
+    if (isExpired) {
+      setCurrentUser(null);
+    } else {
+      const savedUser = localStorage.getItem('suraksha_user');
+      if (savedUser) {
+        try {
+          setCurrentUser(JSON.parse(savedUser));
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
 
